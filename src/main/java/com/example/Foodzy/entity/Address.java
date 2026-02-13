@@ -10,17 +10,17 @@ import jakarta.persistence.Id;
 public class Address {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-   private int id;
+   private long id;
 	private String city;
 	private int pincode;
 	private String state;
 	private String country;
 	private String street;
 	private String landmark;
-	private float latitude;
-	private float longitude;
+	private double latitude;
+	private double longitude;
 	public Address(String city, int pincode, String state, String country, String street, String landmark,
-			float latitude, float longitude) {
+			double latitude, double longitude) {
 		super();
 		this.city = city;
 		this.pincode = pincode;
@@ -35,7 +35,7 @@ public class Address {
 		super();
 	}
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	public void setId(int id) {
@@ -77,13 +77,13 @@ public class Address {
 	public void setLandmark(String landmark) {
 		this.landmark = landmark;
 	}
-	public float getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
 	public void setLatitude(float latitude) {
 		this.latitude = latitude;
 	}
-	public float getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 	public void setLongitude(float longitude) {
