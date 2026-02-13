@@ -16,14 +16,14 @@ public class Orders {
 	private int id;
 	private String status;
 	private String restarunt;
-	private String customer;
+	private Object customer;
     private int cost;
     @OneToMany
     List<Item> items;
-    private String address;
+    private Object address;
     private String pickupAddress;
     private int otp;
-    private String deliveryPartner;
+    private Object deliveryPartner;
     private int payment;
     private String estimatedTime;
     private int distance;
@@ -76,7 +76,7 @@ public class Orders {
 	public void setRestarunt(String restarunt) {
 		this.restarunt = restarunt;
 	}
-	public String getCustomer() {
+	public Object getCustomer() {
 		return customer;
 	}
 	public void setCustomer(String customer) {
@@ -94,7 +94,7 @@ public class Orders {
 	public void setItems(List<Item> items) {
 		this.items = items;
 	}
-	public String getAddress() {
+	public Object getAddress() {
 		return address;
 	}
 	public void setAddress(String address) {
@@ -112,7 +112,7 @@ public class Orders {
 	public void setOtp(int otp) {
 		this.otp = otp;
 	}
-	public String getDeliveryPartner() {
+	public Object getDeliveryPartner() {
 		return deliveryPartner;
 	}
 	public void setDeliveryPartner(String deliveryPartner) {
