@@ -16,7 +16,7 @@ public class Item {
 	private int units;
 	private String type;
 	private String availability;
-	private int rating;
+	private double rating;
 	private int serves;
 	public long getItemId() {
 		return itemId;
@@ -60,10 +60,10 @@ public class Item {
 	public void setAvailability(String availability) {
 		this.availability = availability;
 	}
-	public int getRating() {
+	public double getRating() {
 		return rating;
 	}
-	public void setRating(int rating) {
+	public void setRating(double rating) {
 		this.rating = rating;
 	}
 	public int getServes() {
@@ -73,7 +73,7 @@ public class Item {
 		this.serves = serves;
 	}
 	public Item(String itemName, String description, double price, int units, String type, String availability,
-			int rating, int serves) {
+			double rating, int serves) {
 		super();
 		this.itemName = itemName;
 		this.description = description;
