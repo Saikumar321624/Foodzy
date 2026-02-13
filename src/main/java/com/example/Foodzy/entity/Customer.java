@@ -14,18 +14,18 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	private String name;
-	private Long mobileno;
+	private Long mobileNo;
 	private String mail;
 	private  String gender;
 	private  Address address;
 	@OneToMany
 	private List<Orders>orders;
 	@OneToMany
-	private List<Item>item;
+	private List<Item>cart;
 	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -34,11 +34,11 @@ public class Customer {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Long getMobileno() {
-		return mobileno;
+	public Long getMobileNo() {
+		return mobileNo;
 	}
-	public void setMobileno(Long mobileno) {
-		this.mobileno = mobileno;
+	public void setMobileNo(Long mobileNo) {
+		this.mobileNo = mobileNo;
 	}
 	public String getMail() {
 		return mail;
@@ -64,32 +64,32 @@ public class Customer {
 	public void setOrders(List<Orders> orders) {
 		this.orders = orders;
 	}
-	public List<Item> getItem() {
-		return item;
+	public List<Item> getCart() {
+		return cart;
 	}
-	public void setItem(List<Item> item) {
-		this.item = item;
+	public void setCart(List<Item> cart) {
+		this.cart = cart;
 	}
-	public Customer(int id, String name, Long mobileno, String mail, String gender, Address address,
-			List<Orders> orders, List<Item> item) {
+	public Customer(String name, Long mobileNo, String mail, String gender, Address address, List<Orders> orders,
+			List<Item> cart) {
 		super();
-		
 		this.name = name;
-		this.mobileno = mobileno;
+		this.mobileNo = mobileNo;
 		this.mail = mail;
 		this.gender = gender;
 		this.address = address;
 		this.orders = orders;
-		this.item = item;
+		this.cart = cart;
 	}
 	public Customer() {
 		super();
 	}
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", name=" + name + ", mobileno=" + mobileno + ", mail=" + mail + ", gender="
-				+ gender + ", address=" + address + ", orders=" + orders + ", item=" + item + "]";
+		return "Customer [id=" + id + ", name=" + name + ", mobileNo=" + mobileNo + ", mail=" + mail + ", gender="
+				+ gender + ", address=" + address + ", orders=" + orders + ", cart=" + cart + "]";
 	}
+	
 	
 	
 	

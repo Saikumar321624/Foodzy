@@ -20,7 +20,7 @@ public class Restaurant {
 	private Address address;
 	@OneToMany
 	private List<Item> menu;
-	private String status;
+	
 	private int rating;
 	private String description;
 	@OneToMany
@@ -63,12 +63,6 @@ public class Restaurant {
 	public void setMenu(List<Item> menu) {
 		this.menu = menu;
 	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
 	public int getRating() {
 		return rating;
 	}
@@ -99,16 +93,14 @@ public class Restaurant {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public Restaurant(long id, String name, long mobileno, String mail, Address address, List<Item> menu, String status,
-			int rating, String description, List<Order> orders, int packagingfee, String type) {
+	public Restaurant(String name, long mobileno, String mail, Address address, List<Item> menu, int rating,
+			String description, List<Order> orders, int packagingfee, String type) {
 		super();
-		
 		this.name = name;
 		this.mobileno = mobileno;
 		this.mail = mail;
 		this.address = address;
 		this.menu = menu;
-		this.status = status;
 		this.rating = rating;
 		this.description = description;
 		this.orders = orders;
@@ -121,10 +113,13 @@ public class Restaurant {
 	@Override
 	public String toString() {
 		return "Restaurant [id=" + id + ", name=" + name + ", mobileno=" + mobileno + ", mail=" + mail + ", address="
-				+ address + ", menu=" + menu + ", status=" + status + ", rating=" + rating + ", description="
-				+ description + ", orders=" + orders + ", packagingfee=" + packagingfee + ", type=" + type + "]";
+				+ address + ", menu=" + menu + ", rating=" + rating + ", description=" + description + ", orders="
+				+ orders + ", packagingfee=" + packagingfee + ", type=" + type + "]";
 	}
 	
 	
+	}
+	
 
-}
+
+
