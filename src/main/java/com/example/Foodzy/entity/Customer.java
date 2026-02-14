@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Customer {
@@ -17,6 +18,7 @@ public class Customer {
 	private Long mobileNo;
 	private String mail;
 	private  String gender;
+	@OneToOne
 	private  Address address;
 	@OneToMany
 	private List<Orders>orders;

@@ -7,7 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.criteria.Order;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Restaurant {
@@ -17,6 +17,7 @@ public class Restaurant {
 	private String name;
 	private long mobileno;
 	private String mail;
+	@OneToOne
 	private Address address;
 	@OneToMany
 	private List<Item> menu;
@@ -24,8 +25,8 @@ public class Restaurant {
 	private int rating;
 	private String description;
 	@OneToMany
-	private List<Order>orders;
-	private int packagingfee;
+	private List<Orders>orders;
+	private double packagingfee;
 	private String type;
 	public long getId() {
 		return id;
@@ -75,16 +76,16 @@ public class Restaurant {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public List<Order> getOrders() {
+	public List<Orders> getOrders() {
 		return orders;
 	}
-	public void setOrders(List<Order> orders) {
+	public void setOrders(List<Orders> orders) {
 		this.orders = orders;
 	}
-	public int getPackagingfee() {
+	public double getPackagingfee() {
 		return packagingfee;
 	}
-	public void setPackagingfee(int packagingfee) {
+	public void setPackagingfee(double packagingfee) {
 		this.packagingfee = packagingfee;
 	}
 	public String getType() {
@@ -94,7 +95,7 @@ public class Restaurant {
 		this.type = type;
 	}
 	public Restaurant(String name, long mobileno, String mail, Address address, List<Item> menu, int rating,
-			String description, List<Order> orders, int packagingfee, String type) {
+			String description, List<Orders> orders, double packagingfee, String type) {
 		super();
 		this.name = name;
 		this.mobileno = mobileno;

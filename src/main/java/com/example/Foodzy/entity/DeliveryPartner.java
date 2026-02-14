@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.criteria.Order;
 
 @Entity
 public class DeliveryPartner {
@@ -23,7 +22,7 @@ public class DeliveryPartner {
 	@OneToOne
 	private Address address;
 	@OneToMany
-	private List<Order> order;
+	private List<Orders> order;
 	private String  vehicleNumber;
 	private String status;
 	public long getId() {
@@ -62,10 +61,10 @@ public class DeliveryPartner {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
-	public List<Order> getOrder() {
+	public List<Orders> getOrder() {
 		return order;
 	}
-	public void setOrder(List<Order> order) {
+	public void setOrder(List<Orders> order) {
 		this.order = order;
 	}
 	public String getVehicleNumber() {
@@ -81,7 +80,7 @@ public class DeliveryPartner {
 		this.status = status;
 	}
 	public DeliveryPartner(String name, long mobileNumber, String mailId, int rating, Address address,
-			List<Order> order, String vehicleNumber, String status) {
+			List<Orders> order, String vehicleNumber, String status) {
 		super();
 		this.name = name;
 		this.mobileNumber = mobileNumber;

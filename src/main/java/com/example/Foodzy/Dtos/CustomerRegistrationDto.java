@@ -43,7 +43,7 @@ public class CustomerRegistrationDto {
 	public String toString() {
 		return "CustomerRegistrationDto [name=" + name + ", mobileNo=" + mobileNo + ", mail=" + mail + ", gender="
 				+ gender + "]";
-	}
 
-	
+	}
 }
+
