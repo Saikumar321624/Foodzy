@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 public class Address {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-   private long id;
+    private long id;
 	private String city;
 	private int pincode;
 	private String state;
