@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Orders {
@@ -16,14 +17,19 @@ public class Orders {
 	private long id;
 	private String status;
 	private String restarunt;
+	@OneToOne
 	private Customer customer;
     private int cost;
     @OneToMany
-    List<Item> items;
+    private List<Item> items;
+    @OneToOne
     private Address address;
+    @OneToOne
     private Address pickupAddress;
     private int otp;
+    @OneToOne
     private DeliveryPartner deliveryPartner;
+    @OneToOne
     private Payment payment;
     private String estimatedTime;
     private int distance;
