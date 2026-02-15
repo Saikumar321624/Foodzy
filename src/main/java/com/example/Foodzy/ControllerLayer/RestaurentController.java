@@ -19,5 +19,5 @@ public class RestaurentController {
 	{
 		return rs.registerRestaurent(rdto);
 	}
-
+	
 }

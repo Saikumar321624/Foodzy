@@ -7,4 +7,6 @@ import com.example.Foodzy.entity.DeliveryPartner;
 @Repository
 public interface DeliveryPartnerRepo extends JpaRepository<DeliveryPartner,Long> {
 
+	DeliveryPartner findByMobileNumber(long mob);
+
 }

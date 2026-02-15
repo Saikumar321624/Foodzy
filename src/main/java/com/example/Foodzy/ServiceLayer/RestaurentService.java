@@ -13,7 +13,7 @@ public class RestaurentService {
 		Restaurant rs=new Restaurant();
 		rs.setName(rdto.getName());
 		rs.setMobileno(rdto.getMobileNo());
-		rs.setMail(rdto.getMail());
+		rs.setMail(rdto.getMail()); 
 		rs.setDescription(rdto.getDescription());
 		rs.setPackagingfee(rdto.getPackagingFee());
 		rs.setType(rdto.getType());
