@@ -11,10 +11,11 @@ import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.ServiceLayer.RestaurentService;
 
 @RestController
+@RequestMapping("/restaurant")
 public class RestaurentController {
 	@Autowired
 	RestaurentService rs;
-	@PostMapping("/register/customer")
+	@PostMapping("/register")
 	public ResponseStructure<RestaurentRegistrationDto> restaurentRegister(@RequestBody RestaurentRegistrationDto rdto)
 	{
 		return rs.registerRestaurent(rdto);

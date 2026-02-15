@@ -19,7 +19,7 @@ public class RestaurentService {
 		rs.setType(rdto.getType());
 		repo.save(rs);
 		ResponseStructure<RestaurentRegistrationDto> rsp=new ResponseStructure<RestaurentRegistrationDto>();
-		rsp.setMessage("Customer Has Registered Successfully");
+		rsp.setMessage("Restaurant Has Registered Successfully");
 		rsp.setstatuscode(HttpStatus.CREATED.value());
 		rsp.setData(rdto);
 		return rsp;
