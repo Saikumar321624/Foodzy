@@ -26,5 +26,37 @@ public class RestaurentService {
 		
 		
 	}
+	public ResponseStructure<Restaurant> findRestrant(long phoneNo) {
+		Restaurant rs=repo.findByMobileno(phoneNo);
+		ResponseStructure<Restaurant> resp=new ResponseStructure<Restaurant>();
+		if(rs!=null)
+		{
+			resp.setData(rs);
+			resp.setMessage("Restaurant Found Successfully");
+			resp.setstatuscode(HttpStatus.FOUND.value());
+		}
+		else
+		{
+			resp.setMessage("restarant  not Found");
+			resp.setstatuscode(HttpStatus.NOT_FOUND.value());
+		}
+		return resp;
+	}
+	public ResponseStructure<Restaurant> deleterestaurant(long mobileNo) {
+		Restaurant rs=repo.findByMobileno(mobileNo);
+		ResponseStructure<Restaurant> resp=new ResponseStructure<Restaurant>();
+		if(rs!=null)
+		{
+			repo.delete(rs);
+			resp.setstatuscode(HttpStatus.OK.value());
+			resp.setMessage("Restaurant has been Deleted Successfully");
+		}
+		else
+		{
+			resp.setstatuscode(HttpStatus.NOT_FOUND.value());
+			resp.setMessage("Restaurant with"+mobileNo +"not Found");
+		}
+		return resp;
+	}
 
 }
