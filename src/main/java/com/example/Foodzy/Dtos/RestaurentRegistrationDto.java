@@ -2,12 +2,26 @@ package com.example.Foodzy.Dtos;
 
 public class RestaurentRegistrationDto {
 private String name;
-
 private long mobileNo;
 private String mail;
 private String description;
 private double packagingFee;
+private LocationCoordinates coodinates;
 private String  type;
+public RestaurentRegistrationDto(String name, long mobileNo, String mail, String description, double packagingFee,
+		LocationCoordinates coodinates, String type) {
+	super();
+	this.name = name;
+	this.mobileNo = mobileNo;
+	this.mail = mail;
+	this.description = description;
+	this.packagingFee = packagingFee;
+	this.coodinates = coodinates;
+	this.type = type;
+}
+public RestaurentRegistrationDto() {
+	super();
+}
 public String getName() {
 	return name;
 }
@@ -38,23 +52,11 @@ public double getPackagingFee() {
 public void setPackagingFee(double packagingFee) {
 	this.packagingFee = packagingFee;
 }
-@Override
-public String toString() {
-	return "RestaurentRegistrationDto [name=" + name + ", mobileNo=" + mobileNo + ", mail=" + mail + ", description="
-			+ description + ", packagingFee=" + packagingFee + ", type=" + type + "]";
+public LocationCoordinates getCoodinates() {
+	return coodinates;
 }
-public RestaurentRegistrationDto() {
-	super();
-}
-public RestaurentRegistrationDto(String name, long mobileNo, String mail, String description, double packagingFee,
-		String type) {
-	super();
-	this.name = name;
-	this.mobileNo = mobileNo;
-	this.mail = mail;
-	this.description = description;
-	this.packagingFee = packagingFee;
-	this.type = type;
+public void setCoodinates(LocationCoordinates coodinates) {
+	this.coodinates = coodinates;
 }
 public String getType() {
 	return type;
@@ -62,4 +64,11 @@ public String getType() {
 public void setType(String type) {
 	this.type = type;
 }
+@Override
+public String toString() {
+	return "RestaurentRegistrationDto [name=" + name + ", mobileNo=" + mobileNo + ", mail=" + mail + ", description="
+			+ description + ", packagingFee=" + packagingFee + ", coodinates=" + coodinates + ", type=" + type + "]";
+}
+
+
 }

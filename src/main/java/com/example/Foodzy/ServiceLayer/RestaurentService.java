@@ -1,15 +1,29 @@
 package com.example.Foodzy.ServiceLayer;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.example.Foodzy.Dtos.RestaurentRegistrationDto;
+import com.example.Foodzy.Repositary.AddressRepo;
 import com.example.Foodzy.Repositary.RestaurantRepo;
 import com.example.Foodzy.Response.ResponseStructure;
+import com.example.Foodzy.entity.Address;
 import com.example.Foodzy.entity.Restaurant;
 @Service
 public class RestaurentService {
-	@Autowired RestaurantRepo repo;
-	public ResponseStructure<RestaurentRegistrationDto> registerRestaurent(RestaurentRegistrationDto rdto) {
+	@Autowired 
+    private	RestaurantRepo repo;
+	
+	
+	@Autowired
+	private AddressRepo addressRepo;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	public ResponseStructure<Restaurant> registerRestaurent(RestaurentRegistrationDto rdto) {
 		Restaurant rs=new Restaurant();
 		rs.setName(rdto.getName());
 		rs.setMobileno(rdto.getMobileNo());
@@ -17,13 +31,25 @@ public class RestaurentService {
 		rs.setDescription(rdto.getDescription());
 		rs.setPackagingfee(rdto.getPackagingFee());
 		rs.setType(rdto.getType());
-		repo.save(rs);
-		ResponseStructure<RestaurentRegistrationDto> rsp=new ResponseStructure<RestaurentRegistrationDto>();
+		
+		Address address =new Address();
+	    Map response=restTemplate.getForObject("https://us1.locationiq.com/v1/reverse?key=pk.87ab9aed219019e92d140b2d50bad383&lat="+rdto.getCoodinates().getLatitude()+"&lon="+rdto.getCoodinates().getLongitude()+"&format=json\r\n", Map.class);
+	     Map add=(Map)	response.get("address");
+	   
+	   address.setCity((String)add.get("city"));
+	   address.setCountry((String)add.get("country"));
+//	   address.setPincode((int)add.get("postcode"));
+	   address.setState((String)add.get("state"));
+	   
+	   rs.setAddress(address);
+	   addressRepo.save(address);
+	   repo.save(rs);
+	   
+		ResponseStructure<Restaurant> rsp=new ResponseStructure<Restaurant>();
 		rsp.setMessage("Restaurant Has Registered Successfully");
 		rsp.setstatuscode(HttpStatus.CREATED.value());
-		rsp.setData(rdto);
+		rsp.setData(rs);
 		return rsp;
-		
 		
 	}
 	public ResponseStructure<Restaurant> findRestrant(long phoneNo) {
