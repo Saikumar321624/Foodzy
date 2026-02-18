@@ -2,6 +2,7 @@ package com.example.Foodzy.entity;
 
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,20 +15,44 @@ public class Restaurant {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
+	@Column(unique = true)
 	private String name;
+	@Column(unique = true)
 	private long mobileno;
 	private String mail;
 	@OneToOne
 	private Address address;
 	@OneToMany
 	private List<Item> menu;
-	
 	private int rating;
 	private String description;
 	@OneToMany
 	private List<Orders>orders;
 	private double packagingfee;
 	private String type;
+	private String status="Closed";
+	public Restaurant(long id, String name, long mobileno, String mail, Address address, List<Item> menu, int rating,
+			String description, List<Orders> orders, double packagingfee, String type, String status) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.mobileno = mobileno;
+		this.mail = mail;
+		this.address = address;
+		this.menu = menu;
+		this.rating = rating;
+		this.description = description;
+		this.orders = orders;
+		this.packagingfee = packagingfee;
+		this.type = type;
+		this.status = status;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	public long getId() {
 		return id;
 	}
@@ -115,7 +140,7 @@ public class Restaurant {
 	public String toString() {
 		return "Restaurant [id=" + id + ", name=" + name + ", mobileno=" + mobileno + ", mail=" + mail + ", address="
 				+ address + ", menu=" + menu + ", rating=" + rating + ", description=" + description + ", orders="
-				+ orders + ", packagingfee=" + packagingfee + ", type=" + type + "]";
+				+ orders + ", packagingfee=" + packagingfee + ", type=" + type + ", status=" + status + "]";
 	}
 	
 	
