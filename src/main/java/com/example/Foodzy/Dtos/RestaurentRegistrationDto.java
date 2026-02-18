@@ -1,11 +1,16 @@
 package com.example.Foodzy.Dtos;
-
 public class RestaurentRegistrationDto {
 private String name;
-
 private long mobileNo;
 private String mail;
 private String description;
+private LocationCordinates locationCordinates;
+public LocationCordinates getLocationCordinates() {
+	return locationCordinates;
+}
+public void setLocationCordinates(LocationCordinates locationCordinates) {
+	this.locationCordinates = locationCordinates;
+}
 private double packagingFee;
 private String  type;
 public String getName() {
@@ -41,7 +46,8 @@ public void setPackagingFee(double packagingFee) {
 @Override
 public String toString() {
 	return "RestaurentRegistrationDto [name=" + name + ", mobileNo=" + mobileNo + ", mail=" + mail + ", description="
-			+ description + ", packagingFee=" + packagingFee + ", type=" + type + "]";
+			+ description + ", locationCordinates=" + locationCordinates + ", packagingFee=" + packagingFee + ", type="
+			+ type + "]";
 }
 public RestaurentRegistrationDto() {
 	super();
