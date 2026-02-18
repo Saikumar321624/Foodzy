@@ -13,6 +13,12 @@ import com.example.Foodzy.Repositary.RestaurantRepo;
 import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.entity.Address;
 import com.example.Foodzy.entity.Item;
+
+import com.example.Foodzy.Dtos.RestaurentRegistrationDto;
+import com.example.Foodzy.Repositary.AddressRepo;
+import com.example.Foodzy.Repositary.RestaurantRepo;
+import com.example.Foodzy.Response.ResponseStructure;
+import com.example.Foodzy.entity.Address;
 import com.example.Foodzy.entity.Restaurant;
 @Service
 public class RestaurentService {
@@ -26,6 +32,15 @@ public class RestaurentService {
 	ItemRepo ir;
 	
 	public ResponseStructure<RestaurentRegistrationDto> registerRestaurent(RestaurentRegistrationDto rdto) {
+    private	RestaurantRepo repo;
+	
+	
+	@Autowired
+	private AddressRepo addressRepo;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	public ResponseStructure<Restaurant> registerRestaurent(RestaurentRegistrationDto rdto) {
 		Restaurant rs=new Restaurant();
 		rs.setName(rdto.getName());
 		rs.setMobileno(rdto.getMobileNo());
@@ -50,9 +65,26 @@ public class RestaurentService {
     	rsp.setMessage("Restaurant Has Registered Successfully");
     	rsp.setstatuscode(HttpStatus.CREATED.value());
 		rsp.setData(rdto);
+		
+		Address address =new Address();
+	    Map response=restTemplate.getForObject("https://us1.locationiq.com/v1/reverse?key=pk.87ab9aed219019e92d140b2d50bad383&lat="+rdto.getCoodinates().getLatitude()+"&lon="+rdto.getCoodinates().getLongitude()+"&format=json\r\n", Map.class);
+	     Map add=(Map)	response.get("address");
+	   
+	   address.setCity((String)add.get("city"));
+	   address.setCountry((String)add.get("country"));
+//	   address.setPincode((int)add.get("postcode"));
+	   address.setState((String)add.get("state"));
+	   
+	   rs.setAddress(address);
+	   addressRepo.save(address);
+	   repo.save(rs);
+	   
+		ResponseStructure<Restaurant> rsp=new ResponseStructure<Restaurant>();
+		rsp.setMessage("Restaurant Has Registered Successfully");
+		rsp.setstatuscode(HttpStatus.CREATED.value());
+		rsp.setData(rs);
 		return rsp;
 
-		
 		
 	}
 	public ResponseStructure<Restaurant> findRestrant(long phoneNo) {

@@ -16,5 +16,10 @@ public class FoodzyApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FoodzyApplication.class, args);
 	}
+	
+	@Bean
+	public RestTemplate Resttemplate() {
+		return new RestTemplate();
+	}
 
 }

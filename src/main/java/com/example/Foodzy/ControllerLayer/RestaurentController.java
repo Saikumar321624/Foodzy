@@ -24,7 +24,7 @@ public class RestaurentController {
 	@Autowired
 	RestaurentService rs;
 	@PostMapping("/register")
-	public ResponseStructure<RestaurentRegistrationDto> restaurentRegister(@RequestBody RestaurentRegistrationDto rdto)
+	public ResponseStructure<Restaurant> restaurentRegister(@RequestBody RestaurentRegistrationDto rdto)
 	{
 		return rs.registerRestaurent(rdto);
 	}
