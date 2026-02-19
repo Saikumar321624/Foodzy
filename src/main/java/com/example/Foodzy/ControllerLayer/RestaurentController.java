@@ -1,7 +1,4 @@
 package com.example.Foodzy.ControllerLayer;
-
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +44,11 @@ public class RestaurentController {
 	public ResponseStructure<Restaurant> updateStatus(@RequestParam long mobileNo)
 	{
 		return rs.updateStatus(mobileNo);
+	}
+	@PatchMapping("/updateItemAvailability")
+	public ResponseStructure<Item> updateItemavailability(@RequestParam long restauranMobileNo,@RequestParam long itemId)
+	{
+		return rs.updateItemavailability(restauranMobileNo,itemId);
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.example.Foodzy.ServiceLayer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,42 @@ public class CustomerService {
 		return resp;
 		
 	}
+
+	public ResponseStructure<Customer> find(long mobileNumber) {
+		Customer cs=cr.findByMobileNumber(mobileNumber);
+		ResponseStructure<Customer>resp=new ResponseStructure<Customer>();
+		if (cs!=null) {
+			resp.setMessage("customer found successfully");
+			resp.setstatuscode(HttpStatus.FOUND.value());
+			resp.setData(cs);
+		}
+		else {
+			resp.setMessage("customer not found");
+			resp.setstatuscode(HttpStatus.NOT_FOUND.value());
+		}
+		return resp;
+	}
+
+	public ResponseStructure<Customer> delete(long mobileNumber) {
+		Customer cs=cr.findByMobileNumber(mobileNumber);
+		ResponseStructure<Customer>resp=new ResponseStructure<Customer>();
+		if(cs!=null) {
+			cr.delete(cs);
+			resp.setMessage("deleted successfully");
+			resp.setstatuscode(HttpStatus.OK.value());
+		}else {
+			resp.setMessage("customer not found");
+			
+		}
+		
+		return resp;
+	}
+
+	public void searchItem(long customerMobileNo, String searchKey) {
+		Customer c=cr.findByMobileNumber(customerMobileNo);
+		
+	}
 	
 
 }
+

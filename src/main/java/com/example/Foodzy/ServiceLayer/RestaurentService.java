@@ -1,4 +1,5 @@
 package com.example.Foodzy.ServiceLayer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -121,6 +122,37 @@ public class RestaurentService {
 			resp.setMessage("restaurantNotFound");
 		}	
 		return resp;
+	}
+	public ResponseStructure<Item> updateItemavailability(long restauranMobileNo, long itemId) {
+		ResponseStructure<Item> resp=new ResponseStructure<Item>();
+		Restaurant rs=repo.findByMobileno(restauranMobileNo);
+		if(rs!=null)
+		{
+			List<Item> itemList=rs.getMenu();
+			for(Item i:itemList)
+			{
+				if(i.getItemId()==itemId)
+				{
+					if(i.getAvailability().equals("Available"))
+					{
+						resp.setMessage("item is already available");
+						resp.setData(i);
+						resp.setstatuscode(HttpStatus.BAD_REQUEST.value());
+						
+					}
+					else
+					{
+						i.setAvailability("Available");
+						ir.save(i);
+						resp.setData(i);
+						resp.setMessage("Status updated successfullly");
+						resp.setstatuscode(HttpStatus.OK.value());
+					}
+				}
+			}
+		}
+		return resp;
+		
 	}
 	
 

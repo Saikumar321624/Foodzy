@@ -15,7 +15,7 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	private String name;
-	private Long mobileNo;
+	private Long mobileNumber;
 	private String mail;
 	private  String gender;
 	@OneToOne
@@ -37,10 +37,10 @@ public class Customer {
 		this.name = name;
 	}
 	public Long getMobileNo() {
-		return mobileNo;
+		return mobileNumber;
 	}
 	public void setMobileNo(Long mobileNo) {
-		this.mobileNo = mobileNo;
+		this.mobileNumber = mobileNo;
 	}
 	public String getMail() {
 		return mail;
@@ -76,7 +76,7 @@ public class Customer {
 			List<Item> cart) {
 		super();
 		this.name = name;
-		this.mobileNo = mobileNo;
+		this.mobileNumber = mobileNo;
 		this.mail = mail;
 		this.gender = gender;
 		this.address = address;
@@ -88,7 +88,7 @@ public class Customer {
 	}
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", name=" + name + ", mobileNo=" + mobileNo + ", mail=" + mail + ", gender="
+		return "Customer [id=" + id + ", name=" + name + ", mobileNo=" + mobileNumber + ", mail=" + mail + ", gender="
 				+ gender + ", address=" + address + ", orders=" + orders + ", cart=" + cart + "]";
 	}
 	
