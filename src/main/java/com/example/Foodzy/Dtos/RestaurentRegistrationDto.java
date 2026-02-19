@@ -1,27 +1,48 @@
 package com.example.Foodzy.Dtos;
-
 public class RestaurentRegistrationDto {
 private String name;
 private long mobileNo;
 private String mail;
 private String description;
 private double packagingFee;
-private LocationCoordinates coodinates;
-private String  type;
+private String type;
+private LocationCordinates locationCordinates;
+
+
 public RestaurentRegistrationDto(String name, long mobileNo, String mail, String description, double packagingFee,
-		LocationCoordinates coodinates, String type) {
+		String type, LocationCordinates locationCordinates) {
 	super();
 	this.name = name;
 	this.mobileNo = mobileNo;
 	this.mail = mail;
 	this.description = description;
 	this.packagingFee = packagingFee;
-	this.coodinates = coodinates;
 	this.type = type;
+	this.locationCordinates = locationCordinates;
 }
+
+
 public RestaurentRegistrationDto() {
 	super();
 }
+
+
+public double getPackagingFee() {
+	return packagingFee;
+}
+
+public void setPackagingFee(double packagingFee) {
+	this.packagingFee = packagingFee;
+}
+
+public String getType() {
+	return type;
+}
+
+public void setType(String type) {
+	this.type = type;
+}
+
 public String getName() {
 	return name;
 }
@@ -46,28 +67,18 @@ public String getDescription() {
 public void setDescription(String description) {
 	this.description = description;
 }
-public double getPackagingFee() {
-	return packagingFee;
+public LocationCordinates getLocationCordinates() {
+	return locationCordinates;
 }
-public void setPackagingFee(double packagingFee) {
-	this.packagingFee = packagingFee;
+public void setLocationCordinates(LocationCordinates locationCordinates) {
+	this.locationCordinates = locationCordinates;
 }
-public LocationCoordinates getCoodinates() {
-	return coodinates;
-}
-public void setCoodinates(LocationCoordinates coodinates) {
-	this.coodinates = coodinates;
-}
-public String getType() {
-	return type;
-}
-public void setType(String type) {
-	this.type = type;
-}
+
 @Override
 public String toString() {
 	return "RestaurentRegistrationDto [name=" + name + ", mobileNo=" + mobileNo + ", mail=" + mail + ", description="
-			+ description + ", packagingFee=" + packagingFee + ", coodinates=" + coodinates + ", type=" + type + "]";
+			+ description + ", packagingFee=" + packagingFee + ", type=" + type + ", locationCordinates="
+			+ locationCordinates + "]";
 }
 
 

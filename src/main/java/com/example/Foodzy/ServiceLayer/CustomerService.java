@@ -1,19 +1,29 @@
 package com.example.Foodzy.ServiceLayer;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 
 import com.example.Foodzy.Dtos.CustomerRegistrationDto;
 import com.example.Foodzy.Repositary.CustomerRepo;
+import com.example.Foodzy.Repositary.ItemRepo;
 import com.example.Foodzy.Response.ResponseStructure;
+import com.example.Foodzy.entity.CartItem;
 import com.example.Foodzy.entity.Customer;
+import com.example.Foodzy.entity.Item;
 
 @Service
 public class CustomerService {
 	@Autowired
 	CustomerRepo cr;
+	
+	
+	@Autowired
+	ItemRepo ir;
 
 	public ResponseStructure<CustomerRegistrationDto> registerCustomer(CustomerRegistrationDto cdto) {
 		Customer c=new Customer();
@@ -29,6 +39,48 @@ public class CustomerService {
 		return resp;
 		
 	}
+
+	public ResponseStructure<Customer> find(long mobileNumber) {
+		Customer cs=cr.findByMobileNumber(mobileNumber);
+		ResponseStructure<Customer>resp=new ResponseStructure<Customer>();
+		if (cs!=null) {
+			resp.setMessage("customer found successfully");
+			resp.setstatuscode(HttpStatus.FOUND.value());
+			resp.setData(cs);
+		}
+		else {
+			resp.setMessage("customer not found");
+			resp.setstatuscode(HttpStatus.NOT_FOUND.value());
+		}
+		return resp;
+	}
+
+	public ResponseStructure<Customer> delete(long mobileNumber) {
+		Customer cs=cr.findByMobileNumber(mobileNumber);
+		ResponseStructure<Customer>resp=new ResponseStructure<Customer>();
+		if(cs!=null) {
+			cr.delete(cs);
+			resp.setMessage("deleted successfully");
+			resp.setstatuscode(HttpStatus.OK.value());
+		}else {
+			resp.setMessage("customer not found");
+			
+		}
+		
+		return resp;
+	}
+
+	public void AddCart(long customerMob, Long itemid, int quantity) {
+		// TODO Auto-generated method stub
+		
+		Optional<Item> i=ir.findBy;
+		CartItem cartItem =new CartItem();
+		cartItem.setCustomer(cr.findByMobileNumber(customerMob));
+		cartItem.setItem(i);
+		
+		
+	}
 	
 
 }
+
