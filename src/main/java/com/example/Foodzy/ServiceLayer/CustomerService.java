@@ -1,5 +1,6 @@
 package com.example.Foodzy.ServiceLayer;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.Foodzy.Dtos.CartItemResponse;
 import com.example.Foodzy.Dtos.CustomerRegistrationDto;
+import com.example.Foodzy.Dtos.RestaurentInfo;
 import com.example.Foodzy.Repositary.CartItemRepo;
 import com.example.Foodzy.Repositary.CustomerRepo;
 import com.example.Foodzy.Repositary.ItemRepo;
@@ -111,6 +113,50 @@ public class CustomerService {
 	    rs.setstatuscode(HttpStatus.OK.value());
 
 	    return ResponseEntity.ok(rs);
+	}
+
+	public ResponseEntity<ResponseStructure<List<RestaurentInfo>>> SearchItemOrRestaurent(long cusmobile, String searchkey) {
+		
+		Customer customer=cr.findByMobileNumber(cusmobile);
+		if(customer==null) {
+			throw new RuntimeException("customer not found ");
+		}
+		List<Restaurant> reslist=restaurantRepo.findAll();
+		
+
+		List<RestaurentInfo> restaurentlist = reslist.stream()
+		    .filter(r ->
+		        r.getName().contains(searchkey) ||
+		        r.getMenu().stream()
+		            .anyMatch(i -> i.getItemName().contains(searchkey))
+		    )
+		    .map(r -> convertToRestaurantInfo(r))  
+		    .toList();
+		
+		if(restaurentlist==null) {
+			throw new RuntimeException("no data found");
+		}
+		
+		System.out.println(restaurentlist);
+		
+		ResponseStructure<List<RestaurentInfo>> rs=new ResponseStructure<List<RestaurentInfo>>();
+		rs.setMessage("search result ");
+		rs.setstatuscode(HttpStatus.OK.value());
+		rs.setData(restaurentlist);
+		
+		return ResponseEntity.ok(rs);
+	}
+
+	private RestaurentInfo convertToRestaurantInfo(Restaurant r) {
+		RestaurentInfo rf=new RestaurentInfo();
+		rf.setName(r.getName());
+		rf.setMobileno(r.getMobileno());
+		rf.setMenu(r.getMenu());
+		rf.setMail(r.getMail());
+		rf.setType(r.getType());
+		rf.setDescription(r.getDescription());
+		rf.setRating(r.getRating());
+		return rf;
 	}
 	
 

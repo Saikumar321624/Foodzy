@@ -2,6 +2,8 @@ package com.example.Foodzy.ControllerLayer;
 
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Foodzy.Dtos.CartItemResponse;
 import com.example.Foodzy.Dtos.CustomerRegistrationDto;
+import com.example.Foodzy.Dtos.RestaurentInfo;
 import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.ServiceLayer.CustomerService;
 import com.example.Foodzy.entity.CartItem;
@@ -59,6 +62,11 @@ public class CustomerController {
 	  return	cs.AddCart(mobileNumber,itemid,quantity);
 	}
 	
+	
+	@GetMapping("/searchItemOrResturant")
+	public ResponseEntity<ResponseStructure<List<RestaurentInfo>>> SearchItemOrRes(@RequestParam long cusmobile,@RequestParam String searchkey ) {
+		return cs.SearchItemOrRestaurent(cusmobile,searchkey);
+	}
 	
 
 }
