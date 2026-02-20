@@ -1,6 +1,8 @@
 package com.example.Foodzy.ControllerLayer;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import com.example.Foodzy.Dtos.CustomerRegistrationDto;
 import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.ServiceLayer.CustomerService;
 import com.example.Foodzy.entity.Customer;
+import com.example.Foodzy.entity.Restaurant;
 
 @RestController
 @RequestMapping("/customer")
@@ -34,6 +37,11 @@ public class CustomerController {
 	public ResponseStructure<Customer> deleteCustomer(@RequestParam long mobileNumber)
 	{
 		return cs.delete(mobileNumber);
+	}
+	@GetMapping("/searchItem")
+	public List<Restaurant> searchItem(@RequestParam long customerMobileNo, @RequestParam String searchKey )
+	{
+		return cs.searchItem(customerMobileNo,searchKey);
 	}
 	
    

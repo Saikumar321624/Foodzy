@@ -119,7 +119,7 @@ public class RestaurentService {
 		}
 		else
 		{
-			resp.setMessage("restaurantNotFound");
+			resp.setMessage("restaurant Not Found");
 		}	
 		return resp;
 	}
