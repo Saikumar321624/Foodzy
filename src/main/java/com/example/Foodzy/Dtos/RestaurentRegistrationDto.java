@@ -4,13 +4,11 @@ private String name;
 private long mobileNo;
 private String mail;
 private String description;
-private double packagingFee;
+private Double packagingFee;
 private String type;
-private LocationCordinates locationCordinates;
-
-
-public RestaurentRegistrationDto(String name, long mobileNo, String mail, String description, double packagingFee,
-		String type, LocationCordinates locationCordinates) {
+private LocationCoordinates locationCoordinates;
+public RestaurentRegistrationDto(String name, long mobileNo, String mail, String description, Double packagingFee,
+		String type, LocationCoordinates locationCoordinates) {
 	super();
 	this.name = name;
 	this.mobileNo = mobileNo;
@@ -18,31 +16,11 @@ public RestaurentRegistrationDto(String name, long mobileNo, String mail, String
 	this.description = description;
 	this.packagingFee = packagingFee;
 	this.type = type;
-	this.locationCordinates = locationCordinates;
+	this.locationCoordinates = locationCoordinates;
 }
-
-
 public RestaurentRegistrationDto() {
 	super();
 }
-
-
-public double getPackagingFee() {
-	return packagingFee;
-}
-
-public void setPackagingFee(double packagingFee) {
-	this.packagingFee = packagingFee;
-}
-
-public String getType() {
-	return type;
-}
-
-public void setType(String type) {
-	this.type = type;
-}
-
 public String getName() {
 	return name;
 }
@@ -67,18 +45,29 @@ public String getDescription() {
 public void setDescription(String description) {
 	this.description = description;
 }
-public LocationCordinates getLocationCordinates() {
-	return locationCordinates;
+public Double getPackagingFee() {
+	return packagingFee;
 }
-public void setLocationCordinates(LocationCordinates locationCordinates) {
-	this.locationCordinates = locationCordinates;
+public void setPackagingFee(Double packagingFee) {
+	this.packagingFee = packagingFee;
 }
-
+public String getType() {
+	return type;
+}
+public void setType(String type) {
+	this.type = type;
+}
+public LocationCoordinates getLocationCoordinates() {
+	return locationCoordinates;
+}
+public void setLocationCoordinates(LocationCoordinates locationCoordinates) {
+	this.locationCoordinates = locationCoordinates;
+}
 @Override
 public String toString() {
 	return "RestaurentRegistrationDto [name=" + name + ", mobileNo=" + mobileNo + ", mail=" + mail + ", description="
-			+ description + ", packagingFee=" + packagingFee + ", type=" + type + ", locationCordinates="
-			+ locationCordinates + "]";
+			+ description + ", packagingFee=" + packagingFee + ", type=" + type + ", locationCoordinates="
+			+ locationCoordinates + "]";
 }
 
 

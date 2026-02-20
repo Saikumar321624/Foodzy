@@ -50,15 +50,15 @@ public class RestaurentService {
 		rs.setPackagingfee(rdto.getPackagingFee());
 		rs.setType(rdto.getType());
 		Address address=new Address();
-		Map response=restTemplate.getForObject("https://us1.locationiq.com/v1/reverse?key=pk.0385211038eb29984c09bb077ddeb2d3&lat="+rdto.getLocationCordinates().getLattitude()+"&lon="+rdto.getLocationCordinates().getLongitude()+"&format=json&", Map.class);
+		Map response=restTemplate.getForObject("https://us1.locationiq.com/v1/reverse?key=pk.0385211038eb29984c09bb077ddeb2d3&lat="+rdto.getLocationCoordinates().getLatitude()+"&lon="+rdto.getLocationCoordinates().getLongitude()+"&format=json&", Map.class);
 		Map add=(Map) response.get("address");
 		address.setCity((String)add.get("city"));
 		address.setPincode(Integer.parseInt(add.get("postcode").toString()));
 		address.setCountry((String)add.get("country"));
 		address.setDistrict((String) add.get("city_district"));
 		address.setState((String)add.get("state"));
-		address.setLatitude(rdto.getLocationCordinates().getLattitude());
-		address.setLongitude(rdto.getLocationCordinates().getLongitude());
+		address.setLatitude(rdto.getLocationCoordinates().getLatitude());
+		address.setLongitude(rdto.getLocationCoordinates().getLongitude());
 		rs.setAddress(address);
 		ar.save(address);	
 		repo.save(rs);
@@ -139,6 +139,7 @@ public class RestaurentService {
 		}	
 		return resp;
 	}
+	
 	
 
 }

@@ -6,24 +6,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.Foodzy.Dtos.CartItemResponse;
 import com.example.Foodzy.Dtos.CustomerRegistrationDto;
+import com.example.Foodzy.Repositary.CartItemRepo;
 import com.example.Foodzy.Repositary.CustomerRepo;
 import com.example.Foodzy.Repositary.ItemRepo;
+import com.example.Foodzy.Repositary.RestaurantRepo;
 import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.entity.CartItem;
 import com.example.Foodzy.entity.Customer;
 import com.example.Foodzy.entity.Item;
+import com.example.Foodzy.entity.Restaurant;
 
 @Service
 public class CustomerService {
 	@Autowired
 	CustomerRepo cr;
 	
+	@Autowired
+	RestaurantRepo restaurantRepo;
 	
 	@Autowired
 	ItemRepo ir;
+	
+	@Autowired
+	CartItemRepo cartItemRepo;
 
 	public ResponseStructure<CustomerRegistrationDto> registerCustomer(CustomerRegistrationDto cdto) {
 		Customer c=new Customer();
@@ -66,19 +76,41 @@ public class CustomerService {
 			resp.setMessage("customer not found");
 			
 		}
-		
+		 
 		return resp;
 	}
 
-	public void AddCart(long customerMob, Long itemid, int quantity) {
-		// TODO Auto-generated method stub
-		
-		Optional<Item> i=ir.findBy;
-		CartItem cartItem =new CartItem();
-		cartItem.setCustomer(cr.findByMobileNumber(customerMob));
-		cartItem.setItem(i);
-		
-		
+	public ResponseEntity<ResponseStructure<CartItemResponse>> AddCart(long mobileNumber, Long itemid, int quantity) {
+
+	    Customer customer = cr.findByMobileNumber(mobileNumber);
+	    if (customer == null) {
+	        throw new RuntimeException("Customer not found");
+	    }
+
+	    Item item = ir.findById(itemid)
+	        .orElseThrow(() -> new RuntimeException("Item not found"));
+
+	    CartItem cartItem = new CartItem();
+	    cartItem.setCustomer(customer);
+	    cartItem.setItem(item);
+	    cartItem.setQuantity(quantity);
+	    cartItem.setRestaurant(item.getRestaurant());
+
+	   
+	    customer.getCart().add(cartItem);
+	    cr.save(customer); 
+
+	  
+	    CartItemResponse cartResponse = new CartItemResponse();
+	    cartResponse.setItemName(cartItem.getItem().getItemName());
+	    cartResponse.setQuantity(cartItem.getQuantity());
+
+	    ResponseStructure<CartItemResponse> rs = new ResponseStructure<>();
+	    rs.setMessage("Added to the cart successfully");
+	    rs.setData(cartResponse);
+	    rs.setstatuscode(HttpStatus.OK.value());
+
+	    return ResponseEntity.ok(rs);
 	}
 	
 
