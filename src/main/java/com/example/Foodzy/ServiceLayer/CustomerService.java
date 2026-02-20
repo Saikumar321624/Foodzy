@@ -27,40 +27,39 @@ import com.example.Foodzy.entity.Restaurant;
 public class CustomerService {
 	@Autowired
 	CustomerRepo cr;
-	
+
 	@Autowired
 	RestaurantRepo restaurantRepo;
-	
+
 	@Autowired
 	ItemRepo ir;
-	
+
 	@Autowired
 	CartItemRepo cartItemRepo;
 
 	public ResponseStructure<CustomerRegistrationDto> registerCustomer(CustomerRegistrationDto cdto) {
-		Customer c=new Customer();
+		Customer c = new Customer();
 		c.setName(cdto.getName());
 		c.setMobileNo(cdto.getMobileNo());
 		c.setMail(cdto.getMail());
 		c.setGender(cdto.getGender());
 		cr.save(c);
-		ResponseStructure<CustomerRegistrationDto> resp=new ResponseStructure<CustomerRegistrationDto>();
+		ResponseStructure<CustomerRegistrationDto> resp = new ResponseStructure<CustomerRegistrationDto>();
 		resp.setMessage("customer has registred successfully");
 		resp.setstatuscode(HttpStatus.CREATED.value());
 		resp.setData(cdto);
 		return resp;
-		
+
 	}
 
 	public ResponseStructure<Customer> find(long mobileNumber) {
-		Customer cs=cr.findByMobileNumber(mobileNumber);
-		ResponseStructure<Customer>resp=new ResponseStructure<Customer>();
-		if (cs!=null) {
+		Customer cs = cr.findByMobileNumber(mobileNumber);
+		ResponseStructure<Customer> resp = new ResponseStructure<Customer>();
+		if (cs != null) {
 			resp.setMessage("customer found successfully");
 			resp.setstatuscode(HttpStatus.FOUND.value());
 			resp.setData(cs);
-		}
-		else {
+		} else {
 			resp.setMessage("customer not found");
 			resp.setstatuscode(HttpStatus.NOT_FOUND.value());
 		}
@@ -68,87 +67,80 @@ public class CustomerService {
 	}
 
 	public ResponseStructure<Customer> delete(long mobileNumber) {
-		Customer cs=cr.findByMobileNumber(mobileNumber);
-		ResponseStructure<Customer>resp=new ResponseStructure<Customer>();
-		if(cs!=null) {
+		Customer cs = cr.findByMobileNumber(mobileNumber);
+		ResponseStructure<Customer> resp = new ResponseStructure<Customer>();
+		if (cs != null) {
 			cr.delete(cs);
 			resp.setMessage("deleted successfully");
 			resp.setstatuscode(HttpStatus.OK.value());
-		}else {
+		} else {
 			resp.setMessage("customer not found");
-			
+
 		}
-		 
+
 		return resp;
 	}
 
 	public ResponseEntity<ResponseStructure<CartItemResponse>> AddCart(long mobileNumber, Long itemid, int quantity) {
 
-	    Customer customer = cr.findByMobileNumber(mobileNumber);
-	    if (customer == null) {
-	        throw new RuntimeException("Customer not found");
-	    }
+		Customer customer = cr.findByMobileNumber(mobileNumber);
+		if (customer == null) {
+			throw new RuntimeException("Customer not found");
+		}
 
-	    Item item = ir.findById(itemid)
-	        .orElseThrow(() -> new RuntimeException("Item not found"));
+		Item item = ir.findById(itemid).orElseThrow(() -> new RuntimeException("Item not found"));
 
-	    CartItem cartItem = new CartItem();
-	    cartItem.setCustomer(customer);
-	    cartItem.setItem(item);
-	    cartItem.setQuantity(quantity);
-	    cartItem.setRestaurant(item.getRestaurant());
+		CartItem cartItem = new CartItem();
+		cartItem.setCustomer(customer);
+		cartItem.setItem(item);
+		cartItem.setQuantity(quantity);
+		cartItem.setRestaurant(item.getRestaurant());
 
-	   
-	    customer.getCart().add(cartItem);
-	    cr.save(customer); 
+		customer.getCart().add(cartItem);
+		cr.save(customer);
 
-	  
-	    CartItemResponse cartResponse = new CartItemResponse();
-	    cartResponse.setItemName(cartItem.getItem().getItemName());
-	    cartResponse.setQuantity(cartItem.getQuantity());
+		CartItemResponse cartResponse = new CartItemResponse();
+		cartResponse.setItemName(cartItem.getItem().getItemName());
+		cartResponse.setQuantity(cartItem.getQuantity());
 
-	    ResponseStructure<CartItemResponse> rs = new ResponseStructure<>();
-	    rs.setMessage("Added to the cart successfully");
-	    rs.setData(cartResponse);
-	    rs.setstatuscode(HttpStatus.OK.value());
+		ResponseStructure<CartItemResponse> rs = new ResponseStructure<>();
+		rs.setMessage("Added to the cart successfully");
+		rs.setData(cartResponse);
+		rs.setstatuscode(HttpStatus.OK.value());
 
-	    return ResponseEntity.ok(rs);
+		return ResponseEntity.ok(rs);
 	}
 
-	public ResponseEntity<ResponseStructure<List<RestaurentInfo>>> SearchItemOrRestaurent(long cusmobile, String searchkey) {
-		
-		Customer customer=cr.findByMobileNumber(cusmobile);
-		if(customer==null) {
+	public ResponseEntity<ResponseStructure<List<RestaurentInfo>>> SearchItemOrRestaurent(long cusmobile,
+			String searchkey) {
+
+		Customer customer = cr.findByMobileNumber(cusmobile);
+		if (customer == null) {
 			throw new RuntimeException("customer not found ");
 		}
-		List<Restaurant> reslist=restaurantRepo.findAll();
-		
+
+		String cityname = customer.getAddress().getCity();
+		List<Restaurant> reslist = restaurantRepo.findByAddress_City(cityname).orElseThrow();
 
 		List<RestaurentInfo> restaurentlist = reslist.stream()
-		    .filter(r ->
-		        r.getName().contains(searchkey) ||
-		        r.getMenu().stream()
-		            .anyMatch(i -> i.getItemName().contains(searchkey))
-		    )
-		    .map(r -> convertToRestaurantInfo(r))  
-		    .toList();
-		
-		if(restaurentlist==null) {
+				.filter(r -> r.getName().contains(searchkey)
+						|| r.getMenu().stream().anyMatch(i -> i.getItemName().contains(searchkey)))
+				.map(r -> convertToRestaurantInfo(r)).toList();
+
+		if (restaurentlist == null) {
 			throw new RuntimeException("no data found");
 		}
-		
-		System.out.println(restaurentlist);
-		
-		ResponseStructure<List<RestaurentInfo>> rs=new ResponseStructure<List<RestaurentInfo>>();
+
+		ResponseStructure<List<RestaurentInfo>> rs = new ResponseStructure<List<RestaurentInfo>>();
 		rs.setMessage("search result ");
 		rs.setstatuscode(HttpStatus.OK.value());
 		rs.setData(restaurentlist);
-		
+
 		return ResponseEntity.ok(rs);
 	}
 
 	private RestaurentInfo convertToRestaurantInfo(Restaurant r) {
-		RestaurentInfo rf=new RestaurentInfo();
+		RestaurentInfo rf = new RestaurentInfo();
 		rf.setName(r.getName());
 		rf.setMobileno(r.getMobileno());
 		rf.setMenu(r.getMenu());
@@ -158,7 +150,5 @@ public class CustomerService {
 		rf.setRating(r.getRating());
 		return rf;
 	}
-	
 
 }
-
