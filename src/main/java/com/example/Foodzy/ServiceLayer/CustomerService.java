@@ -90,13 +90,20 @@ public class CustomerService {
 
 		Item item = ir.findById(itemid).orElseThrow(() -> new RuntimeException("Item not found"));
 
-		CartItem cartItem = new CartItem();
-		cartItem.setCustomer(customer);
-		cartItem.setItem(item);
-		cartItem.setQuantity(quantity);
-		cartItem.setRestaurant(item.getRestaurant());
-
-		customer.getCart().add(cartItem);
+//		CartItem cartItem = new CartItem();
+		List<CartItem> clist=cartItemRepo.findAll();
+		CartItem cartItem=clist.stream().filter(c->c.getItem().getItemId()==itemid).findFirst().orElse(null);
+		if(cartItem!=null) {
+			cartItem.setQuantity(cartItem.getQuantity()+quantity);	
+		}else {
+			cartItem=new CartItem();
+			cartItem.setCustomer(customer);
+			cartItem.setItem(item);
+			cartItem.setQuantity(quantity);
+			cartItem.setRestaurant(item.getRestaurant());
+			customer.getCart().add(cartItem);
+		}
+			
 		cr.save(customer);
 
 		CartItemResponse cartResponse = new CartItemResponse();
