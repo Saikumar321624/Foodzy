@@ -1,12 +1,8 @@
 package com.example.Foodzy.ServiceLayer;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -75,6 +71,7 @@ public class CustomerService {
 			resp.setstatuscode(HttpStatus.OK.value());
 		} else {
 			resp.setMessage("customer not found");
+			resp.setstatuscode(HttpStatus.NOT_FOUND.value());
 
 		}
 
@@ -150,5 +147,4 @@ public class CustomerService {
 		rf.setRating(r.getRating());
 		return rf;
 	}
-
 }

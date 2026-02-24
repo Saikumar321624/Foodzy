@@ -16,7 +16,7 @@ public class DeliveryService {
 
 	
 	public ResponseStructure<DeliveryRegistrationDto> saveDriver(DeliveryRegistrationDto deliveryRegistrationDto) {
-		// TODO Auto-generated method stub
+		
 		DeliveryPartner dp=new DeliveryPartner();
 		dp.setName(deliveryRegistrationDto.getName());
 		dp.setMailId(deliveryRegistrationDto.getMailId());
@@ -35,7 +35,7 @@ public class DeliveryService {
 
 
 	public ResponseStructure<DeliveryPartner> findDelivery(long mob) {
-		// TODO Auto-generated method stub
+		
 	DeliveryPartner dp=deliveryPartnerRepo.findByMobileNumber(mob);
 	
 	ResponseStructure<DeliveryPartner> rsp=new ResponseStructure<DeliveryPartner>();
@@ -56,7 +56,7 @@ public class DeliveryService {
 
 
 	public ResponseStructure<DeliveryPartner> deleteDeliveryPartner(long mob) {
-		// TODO Auto-generated method stub
+		
 		DeliveryPartner dp=deliveryPartnerRepo.findByMobileNumber(mob);
 		
 		ResponseStructure<DeliveryPartner> rsp=new ResponseStructure<DeliveryPartner>();

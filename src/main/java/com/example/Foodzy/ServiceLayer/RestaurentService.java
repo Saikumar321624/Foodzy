@@ -14,12 +14,6 @@ import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.entity.Address;
 import com.example.Foodzy.entity.Item;
 
-import com.example.Foodzy.Dtos.RestaurentRegistrationDto;
-import com.example.Foodzy.Repositary.AddressRepo;
-import com.example.Foodzy.Repositary.RestaurantRepo;
-import com.example.Foodzy.Response.ResponseStructure;
-import com.example.Foodzy.entity.Address;
-import com.example.Foodzy.entity.Item;
 import com.example.Foodzy.entity.Restaurant;
 @Service
 public class RestaurentService {
