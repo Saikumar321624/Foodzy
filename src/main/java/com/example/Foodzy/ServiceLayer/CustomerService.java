@@ -1,28 +1,37 @@
 package com.example.Foodzy.ServiceLayer;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.example.Foodzy.Dtos.CartItemResponse;
 import com.example.Foodzy.Dtos.CustomerRegistrationDto;
+import com.example.Foodzy.Dtos.OrderDto;
 import com.example.Foodzy.Dtos.RestaurentInfo;
+import com.example.Foodzy.Exceptions.CustomerNotFoundException;
+import com.example.Foodzy.Exceptions.ItemNotFoundException;
+import com.example.Foodzy.Exceptions.RestaurantnotFoundException;
+import com.example.Foodzy.Repositary.AddressRepo;
 import com.example.Foodzy.Repositary.CartItemRepo;
 import com.example.Foodzy.Repositary.CustomerRepo;
 import com.example.Foodzy.Repositary.ItemRepo;
+import com.example.Foodzy.Repositary.OrdersRepo;
 import com.example.Foodzy.Repositary.RestaurantRepo;
 import com.example.Foodzy.Response.ResponseStructure;
+import com.example.Foodzy.entity.Address;
 import com.example.Foodzy.entity.CartItem;
 import com.example.Foodzy.entity.Customer;
 import com.example.Foodzy.entity.Item;
+import com.example.Foodzy.entity.Orders;
 import com.example.Foodzy.entity.Restaurant;
 
+import jakarta.persistence.criteria.Order;
 @Service
 public class CustomerService {
 	@Autowired
@@ -36,7 +45,12 @@ public class CustomerService {
 
 	@Autowired
 	CartItemRepo cartItemRepo;
-
+	@Autowired
+	RestTemplate restTemplate;
+	@Autowired
+	OrdersRepo orderRepo;
+	@Autowired
+	AddressRepo ar;
 	public ResponseStructure<CustomerRegistrationDto> registerCustomer(CustomerRegistrationDto cdto) {
 		Customer c = new Customer();
 		c.setName(cdto.getName());
@@ -51,7 +65,6 @@ public class CustomerService {
 		return resp;
 
 	}
-
 	public ResponseStructure<Customer> find(long mobileNumber) {
 		Customer cs = cr.findByMobileNumber(mobileNumber);
 		ResponseStructure<Customer> resp = new ResponseStructure<Customer>();
@@ -80,6 +93,7 @@ public class CustomerService {
 
 		return resp;
 	}
+
 
 	public ResponseEntity<ResponseStructure<CartItemResponse>> AddCart(long mobileNumber, Long itemid, int quantity) {
 
