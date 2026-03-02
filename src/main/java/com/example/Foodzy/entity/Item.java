@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Item {
@@ -18,6 +20,27 @@ public class Item {
 	private String availability;
 	private double rating;
 	private int serves;
+	@ManyToOne
+	private Restaurant restaurant;
+	public Item(String itemName, String description, double price, int units, String type,
+			String availability, double rating, int serves, Restaurant restaurant) {
+		super();
+		this.itemName = itemName;
+		this.description = description;
+		this.price = price;
+		this.units = units;
+		this.type = type;
+		this.availability = availability;
+		this.rating = rating;
+		this.serves = serves;
+		this.restaurant = restaurant;
+	}
+	@Override
+	public String toString() {
+		return "Item [itemId=" + itemId + ", itemName=" + itemName + ", description=" + description + ", price=" + price
+				+ ", units=" + units + ", type=" + type + ", availability=" + availability + ", rating=" + rating
+				+ ", serves=" + serves + ", restaurant=" + restaurant + "]";
+	}
 	public long getItemId() {
 		return itemId;
 	}
@@ -72,26 +95,14 @@ public class Item {
 	public void setServes(int serves) {
 		this.serves = serves;
 	}
-	public Item(String itemName, String description, double price, int units, String type, String availability,
-			double rating, int serves) {
-		super();
-		this.itemName = itemName;
-		this.description = description;
-		this.price = price;
-		this.units = units;
-		this.type = type;
-		this.availability = availability;
-		this.rating = rating;
-		this.serves = serves;
+	public Restaurant getRestaurant() {
+		return restaurant;
+	}
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
 	}
 	public Item() {
 		super();
-	}
-	@Override
-	public String toString() {
-		return "Item [itemId=" + itemId + ", itemName=" + itemName + ", description=" + description + ", price=" + price
-				+ ", units=" + units + ", type=" + type + ", availability=" + availability + ", rating=" + rating
-				+ ", serves=" + serves + "]";
 	}
 	
 

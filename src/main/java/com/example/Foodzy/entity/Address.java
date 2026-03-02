@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 public class Address {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+
 	 private long id;
 		private double latitude;
 		private double longitude;

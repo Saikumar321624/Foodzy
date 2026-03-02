@@ -1,6 +1,9 @@
 package com.example.Foodzy.entity;
 
+import java.util.ArrayList;
 import java.util.List;
+
+
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,12 +21,14 @@ public class Customer {
 	private Long mobileNumber;
 	private String mail;
 	private  String gender;
-	@OneToOne
-	private  Address address;
+	@OneToMany
+	private  List<Address> addresses=new ArrayList<Address>();
 	@OneToMany
 	private List<Orders>orders;
 	@OneToMany
-	private List<Item>cart;
+	private List<CartItem> cart;
+	
+	
 	public long getId() {
 		return id;
 	}
@@ -39,8 +44,8 @@ public class Customer {
 	public Long getMobileNo() {
 		return mobileNumber;
 	}
-	public void setMobileNo(Long mobileNo) {
-		this.mobileNumber = mobileNo;
+	public void setMobileNo(Long mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 	public String getMail() {
 		return mail;
@@ -54,11 +59,11 @@ public class Customer {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public Address getAddress() {
-		return address;
+	public List<Address> getAddress() {
+		return addresses;
 	}
-	public void setAddress(Address address) {
-		this.address = address;
+	public void setAddress(List<Address> address) {
+		this.addresses = address;
 	}
 	public List<Orders> getOrders() {
 		return orders;
@@ -66,20 +71,20 @@ public class Customer {
 	public void setOrders(List<Orders> orders) {
 		this.orders = orders;
 	}
-	public List<Item> getCart() {
+	public List<CartItem> getCart() {
 		return cart;
 	}
-	public void setCart(List<Item> cart) {
+	public void setCart(List<CartItem> cart) {
 		this.cart = cart;
 	}
-	public Customer(String name, Long mobileNo, String mail, String gender, Address address, List<Orders> orders,
-			List<Item> cart) {
+	public Customer(String name, Long mobileNo, String mail, String gender, List<Address> address, List<Orders> orders,
+			List<CartItem> cart) {
 		super();
 		this.name = name;
 		this.mobileNumber = mobileNo;
 		this.mail = mail;
 		this.gender = gender;
-		this.address = address;
+		this.addresses = address;
 		this.orders = orders;
 		this.cart = cart;
 	}
@@ -89,14 +94,8 @@ public class Customer {
 	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", name=" + name + ", mobileNo=" + mobileNumber + ", mail=" + mail + ", gender="
-				+ gender + ", address=" + address + ", orders=" + orders + ", cart=" + cart + "]";
+				+ gender + ", address=" + addresses + ", orders=" + orders + ", cart=" + cart + "]";
 	}
-	
-	
-	
-	
-	
-	
 	
 
 }

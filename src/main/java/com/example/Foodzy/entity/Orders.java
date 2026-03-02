@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
@@ -16,12 +17,13 @@ public class Orders {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	private String status;
-	private String restarunt;
+	@ManyToOne
+	private Restaurant restarunt;
 	@OneToOne
 	private Customer customer;
-    private int cost;
+    private double cost;
     @OneToMany
-    private List<Item> items;
+    private List<CartItem> items;
     @OneToOne
     private Address address;
     @OneToOne
@@ -39,7 +41,7 @@ public class Orders {
     private String deliveryInstructions;
     private String date;
 	
-	public Orders(String status, String restarunt, Customer customer, int cost, List<Item> items, Address address,
+	public Orders(String status, Restaurant restarunt, Customer customer, double cost, List<CartItem> items, Address address,
 			Address pickupAddress, int otp, DeliveryPartner deliveryPartner, Payment payment, String estimatedTime,
 			int distance, double discount, String coupons, String specialRequest, String deliveryInstructions,
 			String date) {
@@ -84,11 +86,11 @@ public class Orders {
 		this.status = status;
 	}
 
-	public String getRestarunt() {
+	public Restaurant getRestarunt() {
 		return restarunt;
 	}
 
-	public void setRestarunt(String restarunt) {
+	public void setRestarunt(Restaurant restarunt) {
 		this.restarunt = restarunt;
 	}
 
@@ -100,19 +102,19 @@ public class Orders {
 		this.customer = customer;
 	}
 
-	public int getCost() {
+	public double getCost() {
 		return cost;
 	}
 
-	public void setCost(int cost) {
+	public void setCost(double cost) {
 		this.cost = cost;
 	}
 
-	public List<Item> getItems() {
+	public List<CartItem> getItems() {
 		return items;
 	}
 
-	public void setItems(List<Item> items) {
+	public void setItems(List<CartItem> items) {
 		this.items = items;
 	}
 
