@@ -4,28 +4,32 @@ private String name;
 private long mobileNo;
 private String mail;
 private String description;
-private Double packagingFee;
-private String type;
-private LocationCoordinates locationCoordinates;
-public RestaurentRegistrationDto(String name, long mobileNo, String mail, String description, Double packagingFee,
-		String type, LocationCoordinates locationCoordinates) {
-	super();
-	this.name = name;
-	this.mobileNo = mobileNo;
-	this.mail = mail;
-	this.description = description;
-	this.packagingFee = packagingFee;
-	this.type = type;
-	this.locationCoordinates = locationCoordinates;
-}
-public RestaurentRegistrationDto() {
-	super();
+private LocationCoordinates locationCordinates;
+@Override
+public String toString() {
+	return "RestaurentRegistrationDto [name=" + name + ", mobileNo=" + mobileNo + ", mail=" + mail + ", description="
+			+ description + ", locationCordinates=" + locationCordinates + ", packagingFee=" + packagingFee + ", type="
+			+ type + "]";
 }
 public String getName() {
 	return name;
 }
 public void setName(String name) {
 	this.name = name;
+}
+public RestaurentRegistrationDto() {
+	super();
+}
+public RestaurentRegistrationDto(String name, long mobileNo, String mail, String description,
+		LocationCoordinates locationCordinates, double packagingFee, String type) {
+	super();
+	this.name = name;
+	this.mobileNo = mobileNo;
+	this.mail = mail;
+	this.description = description;
+	this.locationCordinates = locationCordinates;
+	this.packagingFee = packagingFee;
+	this.type = type;
 }
 public long getMobileNo() {
 	return mobileNo;
@@ -45,10 +49,16 @@ public String getDescription() {
 public void setDescription(String description) {
 	this.description = description;
 }
-public Double getPackagingFee() {
+public LocationCoordinates getLocationCordinates() {
+	return locationCordinates;
+}
+public void setLocationCordinates(LocationCoordinates locationCordinates) {
+	this.locationCordinates = locationCordinates;
+}
+public double getPackagingFee() {
 	return packagingFee;
 }
-public void setPackagingFee(Double packagingFee) {
+public void setPackagingFee(double packagingFee) {
 	this.packagingFee = packagingFee;
 }
 public String getType() {
@@ -57,18 +67,6 @@ public String getType() {
 public void setType(String type) {
 	this.type = type;
 }
-public LocationCoordinates getLocationCoordinates() {
-	return locationCoordinates;
-}
-public void setLocationCoordinates(LocationCoordinates locationCoordinates) {
-	this.locationCoordinates = locationCoordinates;
-}
-@Override
-public String toString() {
-	return "RestaurentRegistrationDto [name=" + name + ", mobileNo=" + mobileNo + ", mail=" + mail + ", description="
-			+ description + ", packagingFee=" + packagingFee + ", type=" + type + ", locationCoordinates="
-			+ locationCoordinates + "]";
-}
-
-
+private double packagingFee;
+private String  type;
 }

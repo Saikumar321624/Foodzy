@@ -1,9 +1,9 @@
 package com.example.Foodzy.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
+
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -23,8 +23,8 @@ public class Customer {
 	private Long mobileNumber;
 	private String mail;
 	private  String gender;
-	@OneToOne
-	private  Address address;
+	@OneToMany
+	private  List<Address> addresses=new ArrayList<Address>();
 	@OneToMany
 	private List<Orders>orders;
 	@OneToMany(cascade = jakarta.persistence.CascadeType.ALL)
@@ -61,11 +61,11 @@ public class Customer {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public Address getAddress() {
-		return address;
+	public List<Address> getAddress() {
+		return addresses;
 	}
-	public void setAddress(Address address) {
-		this.address = address;
+	public void setAddress(List<Address> address) {
+		this.addresses = address;
 	}
 	public List<Orders> getOrders() {
 		return orders;
@@ -79,14 +79,14 @@ public class Customer {
 	public void setCart(List<CartItem> cart) {
 		this.cart = cart;
 	}
-	public Customer(String name, Long mobileNo, String mail, String gender, Address address, List<Orders> orders,
+	public Customer(String name, Long mobileNo, String mail, String gender, List<Address> address, List<Orders> orders,
 			List<CartItem> cart) {
 		super();
 		this.name = name;
 		this.mobileNumber = mobileNo;
 		this.mail = mail;
 		this.gender = gender;
-		this.address = address;
+		this.addresses = address;
 		this.orders = orders;
 		this.cart = cart;
 	}
@@ -96,7 +96,7 @@ public class Customer {
 	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", name=" + name + ", mobileNo=" + mobileNumber + ", mail=" + mail + ", gender="
-				+ gender + ", address=" + address + ", orders=" + orders + ", cart=" + cart + "]";
+				+ gender + ", address=" + addresses + ", orders=" + orders + ", cart=" + cart + "]";
 	}
 	
 

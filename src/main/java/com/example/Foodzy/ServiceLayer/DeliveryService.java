@@ -74,6 +74,12 @@ public class DeliveryService {
 	}
 
 
+	public void acceptOrder(long orderId, long partnerId) {
+		
+		
+	}
+
+
 	
 
 }

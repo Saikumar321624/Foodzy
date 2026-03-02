@@ -1,6 +1,5 @@
 package com.example.Foodzy.ControllerLayer;
-
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Foodzy.Dtos.RestaurentRegistrationDto;
 import com.example.Foodzy.Response.ResponseStructure;
+import com.example.Foodzy.ServiceLayer.RedisService;
 import com.example.Foodzy.ServiceLayer.RestaurentService;
 import com.example.Foodzy.entity.Item;
 import com.example.Foodzy.entity.Restaurant;
@@ -23,6 +23,8 @@ import com.example.Foodzy.entity.Restaurant;
 public class RestaurentController {
 	@Autowired
 	RestaurentService rs;
+	@Autowired
+	private RedisService redisService;
 	@PostMapping("/register")
 	public ResponseStructure<Restaurant> restaurentRegister(@RequestBody RestaurentRegistrationDto rdto)
 	{
@@ -48,6 +50,26 @@ public class RestaurentController {
 	public ResponseStructure<Restaurant> updateStatus(@RequestParam long mobileNo)
 	{
 		return rs.updateStatus(mobileNo);
+	}
+	@PatchMapping("/updateItemAvailability")
+	public ResponseStructure<Item> updateItemavailability(@RequestParam long restauranMobileNo,@RequestParam long itemId)
+	{
+		return rs.updateItemavailability(restauranMobileNo,itemId);
+	}
+	@GetMapping("/menu")
+	public ResponseStructure<List<Item>> getMenu(@RequestParam long mobileNo)
+	{
+		return rs.getMenu(mobileNo);
+	}
+	@GetMapping("/nearByPartners")
+	public List<String> getNearByPartners(@RequestParam double latitude,@RequestParam double longitude,@RequestParam double radiusKm)
+	{
+		return redisService.getNearByPartners(latitude,longitude,radiusKm);
+	}
+	@PatchMapping("/acceptOrder")
+	public ResponseStructure<List<String>> acceptOrder(@RequestParam long orderId)
+	{
+		return rs.acceptOrder(orderId);
 	}
 
 }
