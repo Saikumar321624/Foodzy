@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -66,11 +67,24 @@ public class CustomerController {
 	public ResponseStructure<Address> addAddress(@RequestParam long mobileNumber,@RequestBody Address address) {
 		return cs.addAddress(address,mobileNumber);
 	}
+<<<<<<< HEAD
 	
 	@PostMapping("/placeOrder") 
+=======
+	@PostMapping("/placeOrder")
+>>>>>>> 72a3dca2ac0c653f0988436af9cd23591e849ba9
 	public ResponseStructure<OrderNeedconsetDto> placeOrder(@RequestParam long mobileNumber,@RequestParam String orderType,@RequestParam String deliveryInstructions,@RequestParam String specialRequest )
 	{
 		return  cs.placeOrder(mobileNumber,orderType,deliveryInstructions,specialRequest);
+	}
+	@PatchMapping("/confirmOrder")
+	public void confirmOrder(@RequestParam long mobileNo,@RequestParam long orderId)
+	{
+		cs.confirmOrder(mobileNo,orderId);
+	}
+	@PatchMapping("/denyOrder")
+	public void denyOrder(@RequestParam long orderId,@RequestParam long mobileNumber) {
+		cs.denyOrder(orderId,mobileNumber);
 	}
 
 }

@@ -17,7 +17,11 @@ import com.example.Foodzy.Dtos.OrderNeedconsetDto;
 import com.example.Foodzy.Dtos.RestaurentInfo;
 import com.example.Foodzy.Exceptions.CustomerNotFoundException;
 import com.example.Foodzy.Exceptions.ItemNotFoundException;
+<<<<<<< HEAD
 import com.example.Foodzy.Exceptions.RestaurantException;
+=======
+import com.example.Foodzy.Exceptions.OrderNotFoundException;
+>>>>>>> 72a3dca2ac0c653f0988436af9cd23591e849ba9
 import com.example.Foodzy.Exceptions.RestaurantnotFoundException;
 import com.example.Foodzy.Repositary.AddressRepo;
 import com.example.Foodzy.Repositary.CartItemRepo;
@@ -185,6 +189,103 @@ public class CustomerService {
 		resp.setstatuscode(HttpStatus.OK.value());
 		
 		return resp;
+<<<<<<< HEAD
+=======
+	}
+	public ResponseStructure<OrderNeedconsetDto> placeOrder(long mobileNumber, String addressType, String deliveryInstructions, String specialRequest) {
+		Customer cs=cr.findByMobileNumber(mobileNumber);
+		if(cs==null) throw new CustomerNotFoundException();
+		Orders order=new Orders();
+		order.setStatus("Placed");
+		Restaurant restaurant=cs.getCart().get(0).getItem().getRestaurant();
+		order.setRestarunt(restaurant);
+		order.setDeliveryInstructions(deliveryInstructions);
+		Address address=null;
+		for(Address a:cs.getAddress())
+		{
+			if(a.getType().equals(addressType))
+			{
+				order.setAddress(a);
+				address=a;
+				break;
+			}
+		}
+//		int min=1000;
+//		int max=9999;
+//		int otp = ThreadLocalRandom.current().nextInt(min, max + 1);
+//		order.setOtp(otp);
+		double productCost=0;
+		for(CartItem cartItem:cs.getCart())
+		{
+			productCost=cartItem.getItem().getPrice()*cartItem.getQuantity()+productCost;
+		}
+		
+		double deliveryCharge=0;
+		Map response=restTemplate.getForObject("https://us1.locationiq.com/v1/directions/driving/"+restaurant.getAddress().getLatitude()+","+restaurant.getAddress().getLongitude()+";"+address.getLatitude()+","+address.getLongitude()+"?key=pk.e155d0e145eee3dbf5bf4a52ae8ec527&steps=true&alternatives=true&geometries=polyline&overview=full&", Map.class);
+		double distance=0;
+		List routes = (List) response.get("routes");
+
+		if (routes != null && !routes.isEmpty()) {
+		    Map firstRoute = (Map) routes.get(0);
+
+		    Double distanceInMeters = (Double) firstRoute.get("distance");
+
+		    Double distanceInKm = distanceInMeters / 1000;
+		    distance=distanceInKm;
+
+		    System.out.println("Distance in KM: " + distanceInKm);
+		}
+		double chargableDistance;
+		if(distance>2.0)
+		{
+			 chargableDistance=distance-2.0;
+			deliveryCharge=chargableDistance*10;
+		}
+		double cost=deliveryCharge+restaurant.getPackagingfee()+productCost;
+		order.setCost(cost);
+		order.setCustomer(cs);
+		order.setItems(cs.getCart());
+		order.setPickupAddress(restaurant.getAddress());
+		order.setEstimatedTime("10min");
+		order.setDate("date");
+//		OrderDto orderDto=new OrderDto();
+//		orderDto.setCost(cost);
+//		orderDto.setCustomer(cs);
+//		orderDto.setDeliveryAddress(address);
+//		orderDto.setDeliveryInstructions(deliveryInstructions);
+//		orderDto.setDistance(distance);
+//		orderDto.setPickUpAddress(restaurant.getAddress());
+//		orderDto.setRestaurant(restaurant);
+//		orderDto.setItems(cs.getCart());
+		orderRepo.save(order);
+		OrderNeedconsetDto conset=new OrderNeedconsetDto();
+		conset.setCart(order.getItems());
+		conset.setDate(order.getDate());
+		conset.setDeliveryAddress(order.getAddress());
+		conset.setPrice(cost);
+		conset.setStatus("yet to confirm");		
+		ResponseStructure<OrderNeedconsetDto> resp=new ResponseStructure<OrderNeedconsetDto>();
+		resp.setData(conset);
+		resp.setMessage("Order set successfully");
+		resp.setstatuscode(HttpStatus.OK.value());
+		return resp;
+	}
+	public void confirmOrder(long mobileNo, Long orderId) {
+		Customer customer=cr.findByMobileNumber(mobileNo);
+		if(customer==null)throw new CustomerNotFoundException();
+		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
+		
+	}
+	public void denyOrder(long orderId, Long mobileNumber) {
+		Customer customer=cr.findByMobileNumber(mobileNumber);
+		if(customer==null)throw new CustomerNotFoundException();
+		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
+
+		
+		
+	}
+	
+>>>>>>> 72a3dca2ac0c653f0988436af9cd23591e849ba9
 
 	}
 	
