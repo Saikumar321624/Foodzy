@@ -1,18 +1,29 @@
 package com.example.Foodzy.ServiceLayer;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.example.Foodzy.Dtos.DeliveryRegistrationDto;
+import com.example.Foodzy.Exceptions.DeliveryPartnerNotFoundException;
+import com.example.Foodzy.Exceptions.OrderNotFoundException;
 import com.example.Foodzy.Repositary.DeliveryPartnerRepo;
+import com.example.Foodzy.Repositary.OrdersRepo;
 import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.entity.DeliveryPartner;
+import com.example.Foodzy.entity.Orders;
 @Service
 public class DeliveryService {
 	
 	@Autowired
 	private DeliveryPartnerRepo deliveryPartnerRepo;
+	@Autowired
+	private OrdersRepo orderRepo;
+	@Autowired
+	private RedisTemplate<String, String> redisTemplate;
 
 	
 	public ResponseStructure<DeliveryRegistrationDto> saveDriver(DeliveryRegistrationDto deliveryRegistrationDto) {
@@ -74,8 +85,26 @@ public class DeliveryService {
 	}
 
 
-	public void acceptOrder(long orderId, long partnerId) {
-		
+	public void acceptOrder(Long orderId, long partnerId) {
+		DeliveryPartner deliveryPartner=deliveryPartnerRepo.findById(partnerId).orElseThrow(()->new DeliveryPartnerNotFoundException());
+		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
+		if(order.getStatus().equals("Picked")) throw new RuntimeException("order already assigned");
+		order.setStatus("Picked");
+		order.setDeliveryPartner(deliveryPartner);
+		orderRepo.save(order);
+		removeOrderFromAllPartners(orderId);
+	}
+
+
+	private void removeOrderFromAllPartners(Long orderId) {
+		Set<String> keys=redisTemplate.keys("partner:*:orders");
+		if(keys!=null)
+		{
+			for(String key:keys)
+			{
+				redisTemplate.opsForList().remove(key, 0, orderId.toString());
+			}
+		}
 		
 	}
 
