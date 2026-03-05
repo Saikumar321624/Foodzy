@@ -5,6 +5,8 @@ import java.util.List;
 
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,9 +27,9 @@ public class Customer {
 	private  List<Address> addresses=new ArrayList<Address>();
 	@OneToMany
 	private List<Orders>orders;
-	@OneToMany
-	private List<CartItem> cart;
-	
+	@OneToMany(cascade = jakarta.persistence.CascadeType.ALL)
+	@JsonManagedReference
+	private List<CartItem>cart;
 	
 	public long getId() {
 		return id;
