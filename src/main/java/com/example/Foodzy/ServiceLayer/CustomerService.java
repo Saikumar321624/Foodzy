@@ -140,7 +140,7 @@ public class CustomerService {
 			throw new RuntimeException("customer not found ");
 		}
 
-		String cityname = customer.getAddress().getCity();
+		String cityname = customer.getAddress().get(0).getCity();
 		List<Restaurant> reslist = restaurantRepo.findByAddress_City(cityname).orElseThrow();
 
 		List<RestaurentInfo> restaurentlist = reslist.stream()
@@ -171,5 +171,23 @@ public class CustomerService {
 		rf.setRating(r.getRating());
 		return rf;
 	}
+	public ResponseStructure<Address> addAddress(Address address, long mobileNumber) {
+		Customer cs=cr.findByMobileNumber(mobileNumber);
+		if(cs==null) throw new CustomerNotFoundException();
+		ar.save(address);
+		cs.getAddress().add(address);
+		cr.save(cs);
+		ResponseStructure<Address> resp=new ResponseStructure<Address>();
+		resp.setData(address);
+		resp.setMessage("Address has added successfully");
+		resp.setstatuscode(HttpStatus.OK.value());
+		
+		return resp;
+
+	}
+	
+	
+	
+	
 
 }

@@ -40,7 +40,6 @@ public class Orders {
     private String specialRequest;
     private String deliveryInstructions;
     private String date;
-	
 	public Orders(String status, Restaurant restarunt, Customer customer, double cost, List<CartItem> items, Address address,
 			Address pickupAddress, int otp, DeliveryPartner deliveryPartner, Payment payment, String estimatedTime,
 			int distance, double discount, String coupons, String specialRequest, String deliveryInstructions,

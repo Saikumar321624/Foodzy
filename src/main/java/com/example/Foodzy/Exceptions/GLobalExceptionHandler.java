@@ -70,6 +70,36 @@ public class GLobalExceptionHandler {
 		return new ResponseEntity<ResponseStructure<String>>(rs,HttpStatus.NOT_FOUND);
 	}
 	
+	@ExceptionHandler(LocationNotFoundException.class)
+	public ResponseEntity<ResponseStructure<String>> locationNotFound() {
+		ResponseStructure<String> rs=new ResponseStructure<String>();
+		rs.setstatuscode(HttpStatus.NOT_FOUND.value());
+		rs.setData("LOCATION NOT FOUND");
+		rs.setMessage("LOCATION NOT FOUND");
+		
+		return new ResponseEntity<ResponseStructure<String>>(rs,HttpStatus.NOT_FOUND);
+	}
 	
+	@ExceptionHandler(InvalidOtpException.class)
+	public ResponseEntity<ResponseStructure<String>> invalidotpException() {
+		ResponseStructure<String> rs=new ResponseStructure<String>();
+		rs.setstatuscode(HttpStatus.BAD_REQUEST.value());
+		rs.setMessage("otp is incorrect");
+		rs.setData("otp is incorrect");
+		
+		return new ResponseEntity<ResponseStructure<String>>(rs,HttpStatus.BAD_REQUEST);
+		
+	}
+	
+	@ExceptionHandler(RestaurantException.class)
+	public ResponseEntity<ResponseStructure<String>> RestaurantClose() {
+		ResponseStructure<String> rs=new ResponseStructure<String>();
+		rs.setstatuscode(HttpStatus.BAD_GATEWAY.value());
+		rs.setMessage("restaurant is closed");
+		rs.setData("restaurant is closed");
+		
+		return new ResponseEntity<ResponseStructure<String>>(rs,HttpStatus.BAD_GATEWAY);
+		
+	}
 
 }

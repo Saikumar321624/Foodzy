@@ -65,10 +65,11 @@ public class CustomerController {
 	public ResponseStructure<Address> addAddress(@RequestParam long mobileNumber,@RequestBody Address address) {
 		return cs.addAddress(address,mobileNumber);
 	}
-	@PostMapping("/placeOrder")
-	public ResponseStructure<Orders> placeOrder(@RequestParam long mobileNumber,@RequestParam String orderType,@RequestParam String deliveryInstructions,@RequestParam String specialRequest )
-	{
-		return  cs.placeOrder(mobileNumber,orderType,deliveryInstructions,specialRequest);
-	}
+//	
+//	@PostMapping("/placeOrder") 
+//	public ResponseStructure<Orders> placeOrder(@RequestParam long mobileNumber,@RequestParam String orderType,@RequestParam String deliveryInstructions,@RequestParam String specialRequest )
+//	{
+//		return  cs.placeOrder(mobileNumber,orderType,deliveryInstructions,specialRequest);
+//	}
 
 }

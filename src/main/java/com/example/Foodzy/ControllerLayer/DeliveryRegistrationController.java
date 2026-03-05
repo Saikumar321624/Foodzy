@@ -1,5 +1,7 @@
 package com.example.Foodzy.ControllerLayer;
 
+import java.net.http.HttpResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Foodzy.Dtos.DeliveryRegistrationDto;
+import com.example.Foodzy.Dtos.OrdersShowDto;
 import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.ServiceLayer.DeliveryService;
 import com.example.Foodzy.ServiceLayer.RedisService;
 import com.example.Foodzy.entity.DeliveryPartner;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/deliveryPartner")
@@ -47,8 +52,22 @@ public class DeliveryRegistrationController {
 		return redisService.updateLocation(id,latitude,longitude);
 	}
 	@PatchMapping("/acceptOrder")
-	public void acceptOrder(@RequestParam long orderId,@RequestParam long partnerId)
+	public String acceptOrder(@RequestParam Long orderId,@RequestParam Long partnerId)
 	{
-		deliveryService.acceptOrder(orderId,partnerId);
+	boolean accept=	deliveryService.acceptOrder(orderId,partnerId);
+	
+	 return accept?"Order is accepted successfully":"order is alreday assigned";
 	}
+	
+	@GetMapping("/acceptrder")
+	public ResponseStructure<OrdersShowDto> Acceptorder(@RequestParam long id) {
+	 return	deliveryService.showOrder(id);
+	}
+	@GetMapping("/ResturantLocation")
+	public void ResturantLocation(@RequestParam double dplat,@RequestParam double dplong ,@RequestParam double reslat,@RequestParam double reslong,HttpServletResponse resp) {
+	 	deliveryService.dpRestaurantLoc(dplat,dplong,reslat,reslong,resp);
+	}
+	
+	
 }
+
