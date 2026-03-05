@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Foodzy.Dtos.CartItemResponse;
 import com.example.Foodzy.Dtos.CustomerRegistrationDto;
+import com.example.Foodzy.Dtos.OrderNeedconsetDto;
 import com.example.Foodzy.Dtos.RestaurentInfo;
 import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.ServiceLayer.CustomerService;
@@ -66,9 +68,18 @@ public class CustomerController {
 		return cs.addAddress(address,mobileNumber);
 	}
 	@PostMapping("/placeOrder")
-	public ResponseStructure<Orders> placeOrder(@RequestParam long mobileNumber,@RequestParam String orderType,@RequestParam String deliveryInstructions,@RequestParam String specialRequest )
+	public ResponseStructure<OrderNeedconsetDto> placeOrder(@RequestParam long mobileNumber,@RequestParam String orderType,@RequestParam String deliveryInstructions,@RequestParam String specialRequest )
 	{
 		return  cs.placeOrder(mobileNumber,orderType,deliveryInstructions,specialRequest);
+	}
+	@PatchMapping("/confirmOrder")
+	public void confirmOrder(@RequestParam long mobileNo,@RequestParam long orderId)
+	{
+		cs.confirmOrder(mobileNo,orderId);
+	}
+	@PatchMapping("/denyOrder")
+	public void denyOrder(@RequestParam long orderId,@RequestParam long mobileNumber) {
+		cs.denyOrder(orderId,mobileNumber);
 	}
 
 }

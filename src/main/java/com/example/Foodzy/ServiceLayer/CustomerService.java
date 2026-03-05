@@ -13,9 +13,11 @@ import org.springframework.web.client.RestTemplate;
 import com.example.Foodzy.Dtos.CartItemResponse;
 import com.example.Foodzy.Dtos.CustomerRegistrationDto;
 import com.example.Foodzy.Dtos.OrderDto;
+import com.example.Foodzy.Dtos.OrderNeedconsetDto;
 import com.example.Foodzy.Dtos.RestaurentInfo;
 import com.example.Foodzy.Exceptions.CustomerNotFoundException;
 import com.example.Foodzy.Exceptions.ItemNotFoundException;
+import com.example.Foodzy.Exceptions.OrderNotFoundException;
 import com.example.Foodzy.Exceptions.RestaurantnotFoundException;
 import com.example.Foodzy.Repositary.AddressRepo;
 import com.example.Foodzy.Repositary.CartItemRepo;
@@ -171,7 +173,7 @@ public class CustomerService {
 		
 		return resp;
 	}
-	public ResponseStructure<Orders> placeOrder(long mobileNumber, String addressType, String deliveryInstructions, String specialRequest) {
+	public ResponseStructure<OrderNeedconsetDto> placeOrder(long mobileNumber, String addressType, String deliveryInstructions, String specialRequest) {
 		Customer cs=cr.findByMobileNumber(mobileNumber);
 		if(cs==null) throw new CustomerNotFoundException();
 		Orders order=new Orders();
@@ -237,17 +239,32 @@ public class CustomerService {
 //		orderDto.setRestaurant(restaurant);
 //		orderDto.setItems(cs.getCart());
 		orderRepo.save(order);
-		ResponseStructure<Orders> resp=new ResponseStructure<Orders>();
-		resp.setData(order);
+		OrderNeedconsetDto conset=new OrderNeedconsetDto();
+		conset.setCart(order.getItems());
+		conset.setDate(order.getDate());
+		conset.setDeliveryAddress(order.getAddress());
+		conset.setPrice(cost);
+		conset.setStatus("yet to confirm");		
+		ResponseStructure<OrderNeedconsetDto> resp=new ResponseStructure<OrderNeedconsetDto>();
+		resp.setData(conset);
 		resp.setMessage("Order set successfully");
 		resp.setstatuscode(HttpStatus.OK.value());
 		return resp;
 	}
-//	public Object confirmOder(long id) {
-//		Order order=orderRepo.findBy
-//		return null;
-//	}
-//	
+	public void confirmOrder(long mobileNo, Long orderId) {
+		Customer customer=cr.findByMobileNumber(mobileNo);
+		if(customer==null)throw new CustomerNotFoundException();
+		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
+		
+	}
+	public void denyOrder(long orderId, Long mobileNumber) {
+		Customer customer=cr.findByMobileNumber(mobileNumber);
+		if(customer==null)throw new CustomerNotFoundException();
+		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
+
+		
+		
+	}
 	
 
 }
