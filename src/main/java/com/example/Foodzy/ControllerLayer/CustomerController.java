@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Foodzy.Dtos.CartItemResponse;
 import com.example.Foodzy.Dtos.CustomerRegistrationDto;
+import com.example.Foodzy.Dtos.OrderNeedconsetDto;
 import com.example.Foodzy.Dtos.RestaurentInfo;
 import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.ServiceLayer.CustomerService;
@@ -65,11 +66,11 @@ public class CustomerController {
 	public ResponseStructure<Address> addAddress(@RequestParam long mobileNumber,@RequestBody Address address) {
 		return cs.addAddress(address,mobileNumber);
 	}
-//	
-//	@PostMapping("/placeOrder") 
-//	public ResponseStructure<Orders> placeOrder(@RequestParam long mobileNumber,@RequestParam String orderType,@RequestParam String deliveryInstructions,@RequestParam String specialRequest )
-//	{
-//		return  cs.placeOrder(mobileNumber,orderType,deliveryInstructions,specialRequest);
-//	}
+	
+	@PostMapping("/placeOrder") 
+	public ResponseStructure<OrderNeedconsetDto> placeOrder(@RequestParam long mobileNumber,@RequestParam String orderType,@RequestParam String deliveryInstructions,@RequestParam String specialRequest )
+	{
+		return  cs.placeOrder(mobileNumber,orderType,deliveryInstructions,specialRequest);
+	}
 
 }

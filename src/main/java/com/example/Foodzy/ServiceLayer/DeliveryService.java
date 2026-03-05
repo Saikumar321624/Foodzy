@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.example.Foodzy.Dtos.DeliveryRegistrationDto;
 //import com.example.Foodzy.Dtos.OdersShowDto;
 import com.example.Foodzy.Dtos.OrdersShowDto;
+import com.example.Foodzy.Exceptions.InvalidOtpException;
 import com.example.Foodzy.Exceptions.LocationNotFoundException;
 import com.example.Foodzy.Repositary.DeliveryPartnerRepo;
 import com.example.Foodzy.Repositary.OrdersRepo;
@@ -147,6 +148,24 @@ public class DeliveryService {
 	  
 	  return rs;
 	  
+	}
+
+
+	public ResponseStructure<Orders> MarkAsDeliver(Long dpmob, Long orderid, Integer otp) {
+		Orders order=orderRepository.findById(orderid).orElseThrow(()-> new RuntimeException("Order not found"));
+		if(otp==order.getOtp()) {
+			order.setStatus("Delivered");
+		}else {
+			throw new InvalidOtpException();
+		}
+		
+		ResponseStructure<Orders> rs=new ResponseStructure<Orders>();
+		rs.setstatuscode(HttpStatus.ACCEPTED.value());
+		rs.setMessage("Order delivered successfully");
+		rs.setData(order);
+		
+		return rs;
+		
 	}
 	
 	}

@@ -19,6 +19,7 @@ import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.ServiceLayer.DeliveryService;
 import com.example.Foodzy.ServiceLayer.RedisService;
 import com.example.Foodzy.entity.DeliveryPartner;
+import com.example.Foodzy.entity.Orders;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -66,6 +67,11 @@ public class DeliveryRegistrationController {
 	@GetMapping("/ResturantLocation")
 	public void ResturantLocation(@RequestParam double dplat,@RequestParam double dplong ,@RequestParam double reslat,@RequestParam double reslong,HttpServletResponse resp) {
 	 	deliveryService.dpRestaurantLoc(dplat,dplong,reslat,reslong,resp);
+	}
+	
+	@GetMapping("/markasdeliver")
+	public ResponseStructure<Orders> Deliverye(@RequestParam Long dpmob,@RequestParam Long Orderid,@RequestParam Integer otp) {
+	  return	deliveryService.MarkAsDeliver(dpmob,Orderid,otp);
 	}
 	
 	
