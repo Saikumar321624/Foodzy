@@ -1,11 +1,8 @@
 package com.example.Foodzy.ServiceLayer;
 
-<<<<<<< HEAD
 import java.io.IOException;
 import java.util.List;
-=======
 import java.util.Set;
->>>>>>> 72a3dca2ac0c653f0988436af9cd23591e849ba9
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,48 +11,35 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.Foodzy.Dtos.DeliveryRegistrationDto;
-<<<<<<< HEAD
 //import com.example.Foodzy.Dtos.OdersShowDto;
 import com.example.Foodzy.Dtos.OrdersShowDto;
 import com.example.Foodzy.Exceptions.InvalidOtpException;
 import com.example.Foodzy.Exceptions.LocationNotFoundException;
-=======
+
 import com.example.Foodzy.Exceptions.DeliveryPartnerNotFoundException;
 import com.example.Foodzy.Exceptions.OrderNotFoundException;
->>>>>>> 72a3dca2ac0c653f0988436af9cd23591e849ba9
 import com.example.Foodzy.Repositary.DeliveryPartnerRepo;
 import com.example.Foodzy.Repositary.OrdersRepo;
 import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.entity.CartItem;
 import com.example.Foodzy.entity.DeliveryPartner;
-<<<<<<< HEAD
 import com.example.Foodzy.entity.Item;
 import com.example.Foodzy.entity.Orders;
 import com.example.Foodzy.entity.Restaurant;
 
 import ch.qos.logback.core.util.Duration;
 import jakarta.servlet.http.HttpServletResponse;
-=======
 import com.example.Foodzy.entity.Orders;
->>>>>>> 72a3dca2ac0c653f0988436af9cd23591e849ba9
 @Service
 public class DeliveryService {
 	
 	@Autowired
 	private DeliveryPartnerRepo deliveryPartnerRepo;
-<<<<<<< HEAD
-	
+
 	@Autowired
 	private OrdersRepo orderRepository;
-	
-	@Autowired
-	private RedisTemplate<String, String > redisTemplate;
-=======
-	@Autowired
-	private OrdersRepo orderRepo;
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
->>>>>>> 72a3dca2ac0c653f0988436af9cd23591e849ba9
 
 	
 	public ResponseStructure<DeliveryRegistrationDto> saveDriver(DeliveryRegistrationDto deliveryRegistrationDto) {
@@ -121,8 +105,6 @@ public class DeliveryService {
 	            .orElseThrow(() -> new RuntimeException("Order not found"));
 	    DeliveryPartner deliveryPartner = deliveryPartnerRepo.findById(partnerId)
 	            .orElseThrow(() -> new RuntimeException("Partner not found"));
-
-<<<<<<< HEAD
 	    String lockKey = "order_lock" + orderId;
 	    Boolean locked = redisTemplate.opsForValue()
 	            .setIfAbsent(lockKey, partnerId.toString());
@@ -184,14 +166,15 @@ public class DeliveryService {
 		rs.setstatuscode(HttpStatus.ACCEPTED.value());
 		rs.setMessage("Order delivered successfully");
 		rs.setData(order);
-=======
+		return rs;
+	}	
 	public void acceptOrder(Long orderId, long partnerId) {
 		DeliveryPartner deliveryPartner=deliveryPartnerRepo.findById(partnerId).orElseThrow(()->new DeliveryPartnerNotFoundException());
-		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
+		Orders order=orderRepository.findById(orderId).orElseThrow(()->new OrderNotFoundException());
 		if(order.getStatus().equals("Picked")) throw new RuntimeException("order already assigned");
 		order.setStatus("Picked");
 		order.setDeliveryPartner(deliveryPartner);
-		orderRepo.save(order);
+		orderRepository.save(order);
 		removeOrderFromAllPartners(orderId);
 	}
 
@@ -205,9 +188,6 @@ public class DeliveryService {
 				redisTemplate.opsForList().remove(key, 0, orderId.toString());
 			}
 		}
->>>>>>> 72a3dca2ac0c653f0988436af9cd23591e849ba9
-		
-		return rs;
 		
 	}
 	
