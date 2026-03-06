@@ -62,8 +62,6 @@ public class RestaurentService {
     	rsp.setstatuscode(HttpStatus.CREATED.value());
 		rsp.setData(rs);
 		return rsp;
-
-		
 		
 	}
 	public ResponseStructure<Restaurant> findRestrant(long phoneNo) {
@@ -156,7 +154,7 @@ public class RestaurentService {
 		Orders order=orderRepo.findById(orderId).orElseThrow(()-> new OrderNotFoundException());
 		List<String> partnerIds=redisService.getNearByPartners(order.getRestarunt().getAddress().getLatitude(), order.getRestarunt().getAddress().getLongitude(), 5);
 		for(String partnerId :partnerIds)
-		{
+		{ 
 			redistemplate.opsForList().rightPush("partner:"+partnerId+":orders",orderId.toString());
 		}
 		ResponseStructure<List<String>> resp=new  ResponseStructure<List<String>>();
@@ -164,9 +162,6 @@ public class RestaurentService {
 		resp.setstatuscode(HttpStatus.ACCEPTED.value());
 		resp.setData(partnerIds);
 		return resp;
-		
 	}
 	
-	
-
 }
