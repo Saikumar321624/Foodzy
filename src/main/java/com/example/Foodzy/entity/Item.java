@@ -1,5 +1,6 @@
 package com.example.Foodzy.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +21,7 @@ public class Item {
 	private String availability;
 	private double rating;
 	private int serves;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Restaurant restaurant;
 	public Item(String itemName, String description, double price, int units, String type,
 			String availability, double rating, int serves, Restaurant restaurant) {

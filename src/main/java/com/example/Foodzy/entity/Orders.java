@@ -2,6 +2,7 @@ package com.example.Foodzy.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +23,7 @@ public class Orders {
 	@OneToOne
 	private Customer customer;
     private double cost;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<CartItem> items;
     @OneToOne
     private Address address;

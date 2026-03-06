@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,11 +24,11 @@ public class Customer {
 	private Long mobileNumber;
 	private String mail;
 	private  String gender;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private  List<Address> addresses=new ArrayList<Address>();
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Orders>orders;
-	@OneToMany(cascade = jakarta.persistence.CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<CartItem>cart;
 	

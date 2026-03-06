@@ -75,13 +75,13 @@ public class CustomerController {
 		return  cs.placeOrder(mobileNumber,orderType,deliveryInstructions,specialRequest);
 	}
 	@PatchMapping("/confirmOrder")
-	public void confirmOrder(@RequestParam long mobileNo,@RequestParam long orderId)
+	public ResponseStructure<Orders> confirmOrder(@RequestParam long mobileNo,@RequestParam long orderId)
 	{
-		cs.confirmOrder(mobileNo,orderId);
+		return cs.confirmOrder(mobileNo,orderId);
 	}
 	@PatchMapping("/denyOrder")
-	public void denyOrder(@RequestParam long orderId,@RequestParam long mobileNumber) {
-		cs.denyOrder(orderId,mobileNumber);
+	public ResponseStructure<Orders> denyOrder(@RequestParam long orderId,@RequestParam long mobileNumber) {
+		return cs.denyOrder(orderId,mobileNumber);
 	}
 
 }		
