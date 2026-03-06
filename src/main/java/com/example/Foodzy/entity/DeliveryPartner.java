@@ -2,6 +2,7 @@ package com.example.Foodzy.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +22,7 @@ public class DeliveryPartner {
 	private int rating;
 	@OneToOne
 	private Address address;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Orders> order;
 	private String  vehicleNumber;
 	private String status;
