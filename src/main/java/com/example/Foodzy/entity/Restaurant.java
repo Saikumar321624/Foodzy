@@ -23,11 +23,11 @@ public class Restaurant {
 	private String mail;
 	@OneToOne
 	private Address address;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Item> menu;
 	private int rating;
 	private String description;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Orders>orders;
 	private double packagingfee;
 	private String type;
