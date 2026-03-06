@@ -143,7 +143,7 @@ public class CustomerService {
 			throw new RuntimeException("customer not found ");
 		}
 
-		String cityname = ((Address) customer.getAddress()).getCity();
+		String cityname = (customer.getAddress()).getCity();
 		List<Restaurant> reslist = restaurantRepo.findByAddress_City(cityname).orElseThrow();
 
 		List<RestaurentInfo> restaurentlist = reslist.stream()
@@ -174,4 +174,5 @@ public class CustomerService {
 		rf.setRating(r.getRating());
 		return rf;
 	}
+	
 }
