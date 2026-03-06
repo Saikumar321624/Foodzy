@@ -12,13 +12,11 @@ import org.springframework.web.client.RestTemplate;
 
 import com.example.Foodzy.Dtos.CartItemResponse;
 import com.example.Foodzy.Dtos.CustomerRegistrationDto;
-import com.example.Foodzy.Dtos.OrderDto;
 import com.example.Foodzy.Dtos.OrderNeedconsetDto;
 import com.example.Foodzy.Dtos.RestaurentInfo;
 import com.example.Foodzy.Exceptions.CustomerNotFoundException;
-import com.example.Foodzy.Exceptions.ItemNotFoundException;
+import com.example.Foodzy.Exceptions.RestaurantException;
 import com.example.Foodzy.Exceptions.OrderNotFoundException;
-import com.example.Foodzy.Exceptions.RestaurantnotFoundException;
 import com.example.Foodzy.Repositary.AddressRepo;
 import com.example.Foodzy.Repositary.CartItemRepo;
 import com.example.Foodzy.Repositary.CustomerRepo;
@@ -33,7 +31,6 @@ import com.example.Foodzy.entity.Item;
 import com.example.Foodzy.entity.Orders;
 import com.example.Foodzy.entity.Restaurant;
 
-import jakarta.persistence.criteria.Order;
 @Service
 public class CustomerService {
 	@Autowired
@@ -186,12 +183,20 @@ public class CustomerService {
 		
 		return resp;
 	}
+		
+	
+	
 	public ResponseStructure<OrderNeedconsetDto> placeOrder(long mobileNumber, String addressType, String deliveryInstructions, String specialRequest) {
 		Customer cs=cr.findByMobileNumber(mobileNumber);
 		if(cs==null) throw new CustomerNotFoundException();
 		Orders order=new Orders();
 		order.setStatus("Placed");
 		Restaurant restaurant=cs.getCart().get(0).getItem().getRestaurant();
+
+		if(!restaurant.getStatus().equals("Opened")) {
+			throw new RestaurantException();
+		}
+		order.setRestarunt(restaurant);
 		order.setDeliveryInstructions(deliveryInstructions);
 		Address address=null;
 		for(Address a:cs.getAddress())
@@ -285,6 +290,7 @@ public class CustomerService {
 		return resp;
 		
 	}
-	
 
+	
+	
 }

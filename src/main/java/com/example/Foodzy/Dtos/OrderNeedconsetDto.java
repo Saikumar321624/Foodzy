@@ -6,6 +6,7 @@ import com.example.Foodzy.entity.Address;
 import com.example.Foodzy.entity.CartItem;
 
 public class OrderNeedconsetDto {
+
 private List<CartItem> cart;
 private Address deliveryAddress;
 private String status;
