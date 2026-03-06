@@ -192,7 +192,6 @@ public class CustomerService {
 		Orders order=new Orders();
 		order.setStatus("Placed");
 		Restaurant restaurant=cs.getCart().get(0).getItem().getRestaurant();
-		order.setRestarunt(restaurant);
 		order.setDeliveryInstructions(deliveryInstructions);
 		Address address=null;
 		for(Address a:cs.getAddress())
@@ -204,10 +203,7 @@ public class CustomerService {
 				break;
 			}
 		}
-//		int min=1000;
-//		int max=9999;
-//		int otp = ThreadLocalRandom.current().nextInt(min, max + 1);
-//		order.setOtp(otp);
+	
 		double productCost=0;
 		for(CartItem cartItem:cs.getCart())
 		{
@@ -242,15 +238,6 @@ public class CustomerService {
 		order.setPickupAddress(restaurant.getAddress());
 		order.setEstimatedTime("10min");
 		order.setDate("date");
-//		OrderDto orderDto=new OrderDto();
-//		orderDto.setCost(cost);
-//		orderDto.setCustomer(cs);
-//		orderDto.setDeliveryAddress(address);
-//		orderDto.setDeliveryInstructions(deliveryInstructions);
-//		orderDto.setDistance(distance);
-//		orderDto.setPickUpAddress(restaurant.getAddress());
-//		orderDto.setRestaurant(restaurant);
-//		orderDto.setItems(cs.getCart());
 		orderRepo.save(order);
 		OrderNeedconsetDto conset=new OrderNeedconsetDto();
 		conset.setCart(order.getItems());
@@ -264,18 +251,38 @@ public class CustomerService {
 		resp.setstatuscode(HttpStatus.OK.value());
 		return resp;
 	}
-	public void confirmOrder(long mobileNo, Long orderId) {
+	public ResponseStructure<Orders> confirmOrder(long mobileNo, Long orderId) {
 		Customer customer=cr.findByMobileNumber(mobileNo);
 		if(customer==null)throw new CustomerNotFoundException();
 		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
+		order.setStatus("Placed");
+		int min=1000;
+		int max=9999;
+		int otp = ThreadLocalRandom.current().nextInt(min, max + 1);
+		order.setOtp(otp);
+		Restaurant restaurant=customer.getCart().get(0).getItem().getRestaurant();
+		order.setRestarunt(restaurant);
+		restaurant.getOrders().add(order);
+		restaurantRepo.save(restaurant);
+		orderRepo.save(order);
+		ResponseStructure<Orders> resp=new ResponseStructure<Orders>();
+		resp.setData(order);
+		resp.setMessage("Order set successfully");
+		resp.setstatuscode(HttpStatus.OK.value());
+		return resp;
+		
 		
 	}
-	public void denyOrder(long orderId, Long mobileNumber) {
+	public ResponseStructure<Orders> denyOrder(long orderId, Long mobileNumber) {
 		Customer customer=cr.findByMobileNumber(mobileNumber);
 		if(customer==null)throw new CustomerNotFoundException();
 		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
-
-		
+		order.setStatus("Cancelled");
+		ResponseStructure<Orders> resp=new ResponseStructure<Orders>();
+		resp.setData(order);
+		resp.setMessage("Order cancelled successfully");
+		resp.setstatuscode(HttpStatus.OK.value());
+		return resp;
 		
 	}
 	
