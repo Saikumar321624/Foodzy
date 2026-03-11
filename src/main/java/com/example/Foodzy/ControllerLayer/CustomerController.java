@@ -70,7 +70,7 @@ public class CustomerController {
 
 	@PostMapping("/placeOrder")
 
-	public ResponseStructure<OrderNeedconsetDto> placeOrder(@RequestParam long mobileNumber,@RequestParam String orderType,@RequestParam String deliveryInstructions,@RequestParam String specialRequest )
+	public ResponseStructure<OrderNeedconsetDto> placeOrder(@RequestParam long mobileNumber,@RequestParam String orderType,@RequestParam String deliveryInstructions,@RequestParam String specialRequest)
 	{
 		return  cs.placeOrder(mobileNumber,orderType,deliveryInstructions,specialRequest);
 	}
@@ -79,9 +79,15 @@ public class CustomerController {
 	{
 		return cs.confirmOrder(mobileNo,orderId);
 	}
-	@PatchMapping("/denyOrder")
-	public ResponseStructure<Orders> denyOrder(@RequestParam long orderId,@RequestParam long mobileNumber) {
-		return cs.denyOrder(orderId,mobileNumber);
+//	@PatchMapping("/denyOrder")
+//	public ResponseStructure<Orders> denyOrder(@RequestParam long orderId,@RequestParam long mobileNumber) {
+//		return cs.denyOrder(orderId,mobileNumber);
+//	}
+	
+	@PatchMapping("/CancelOrder")
+	public ResponseStructure<Orders> CancelOrder(@RequestParam long CustMobno,@RequestParam long Orderid) {
+		return cs.CancelOrder(CustMobno,Orderid);
 	}
-
+	
+	
 }
