@@ -71,5 +71,15 @@ public class RestaurentController {
 	{
 		return rs.acceptOrder(orderId);
 	}
+	@DeleteMapping("/removeItemFromMEnu")
+	public ResponseStructure<Restaurant> removeItemFromMenu(@RequestParam Long mobileNumber,@RequestParam Long itemId)
+	{
+		return rs.removeItemFromMenu(mobileNumber,itemId);
+	}
+	@PatchMapping("/updateItemDetails")
+	public ResponseStructure<Item> updateItemDetails(@RequestParam Long mobilenumber,@RequestParam Long  itemId)
+	{
+		return rs.updateItemDetails(mobilenumber,itemId);
+	}
 
 }
