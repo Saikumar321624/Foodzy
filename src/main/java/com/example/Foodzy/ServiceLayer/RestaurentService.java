@@ -1,8 +1,6 @@
 package com.example.Foodzy.ServiceLayer;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -19,7 +17,9 @@ import com.example.Foodzy.Repositary.RestaurantRepo;
 import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.entity.Address;
 import com.example.Foodzy.entity.Item;
+
 import com.example.Foodzy.entity.Orders;
+
 import com.example.Foodzy.entity.Restaurant;
 @Service
 public class RestaurentService {

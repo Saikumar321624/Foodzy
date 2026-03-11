@@ -1,8 +1,8 @@
 package com.example.Foodzy.ServiceLayer;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -34,7 +34,6 @@ import com.example.Foodzy.entity.Customer;
 import com.example.Foodzy.entity.Item;
 import com.example.Foodzy.entity.Orders;
 import com.example.Foodzy.entity.Restaurant;
-
 @Service
 public class CustomerService {
 	@Autowired
@@ -91,6 +90,7 @@ public class CustomerService {
 			resp.setstatuscode(HttpStatus.OK.value());
 		} else {
 			resp.setMessage("customer not found");
+			resp.setstatuscode(HttpStatus.NOT_FOUND.value());
 
 		}
 
@@ -143,7 +143,11 @@ public class CustomerService {
 			throw new RuntimeException("customer not found ");
 		}
 
+
+//		String cityname = (customer.getAddress()).getCity();
+
 		String cityname = customer.getAddress().get(0).getCity();
+
 		List<Restaurant> reslist = restaurantRepo.findByAddress_City(cityname).orElseThrow();
 
 		List<RestaurentInfo> restaurentlist = reslist.stream()
@@ -174,6 +178,7 @@ public class CustomerService {
 		rf.setRating(r.getRating());
 		return rf;
 	}
+
 	public ResponseStructure<Address> addAddress(Address address, long mobileNumber) {
 		Customer cs=cr.findByMobileNumber(mobileNumber);
 		if(cs==null) throw new CustomerNotFoundException();
@@ -187,81 +192,7 @@ public class CustomerService {
 		
 		return resp;
 	}
-		
-	
-	
-//	public ResponseStructure<OrderNeedconsetDto> placeOrder(long mobileNumber, String addressType, String deliveryInstructions, String specialRequest) {
-//		Customer cs=cr.findByMobileNumber(mobileNumber);
-//		if(cs==null) throw new CustomerNotFoundException();
-//		Orders order=new Orders();
-//		order.setStatus("Placed");
-//		Restaurant restaurant=cs.getCart().get(0).getItem().getRestaurant();
-//		if(restaurant==null) throw new RestaurantnotFoundException();
-//		
-//
-//		if(!restaurant.getStatus().equals("Opened")) {
-//			throw new RestaurantException();
-//		}
-//		order.setRestarunt(restaurant);
-//		order.setDeliveryInstructions(deliveryInstructions);
-//		Address address=null;
-//		for(Address a:cs.getAddress())
-//		{
-//			if(a.getType().equals(addressType))
-//			{
-//				order.setAddress(a);
-//				address=a;
-//				break;
-//			}
-//		}
-//	
-//		double productCost=0;
-//		for(CartItem cartItem:cs.getCart())
-//		{
-//			productCost=cartItem.getItem().getPrice()*cartItem.getQuantity()+productCost;
-//		}
-//		
-//		double deliveryCharge=0;
-//		Map response=restTemplate.getForObject("https://us1.locationiq.com/v1/directions/driving/"+restaurant.getAddress().getLatitude()+","+restaurant.getAddress().getLongitude()+";"+address.getLatitude()+","+address.getLongitude()+"?key=pk.e155d0e145eee3dbf5bf4a52ae8ec527&steps=true&alternatives=true&geometries=polyline&overview=full&", Map.class);
-//		double distance=0;
-//		List routes = (List) response.get("routes");
-//
-//		if (routes != null && !routes.isEmpty()) {
-//		    Map firstRoute = (Map) routes.get(0);
-//
-//		    Double distanceInMeters = (Double) firstRoute.get("distance");
-//
-//		    Double distanceInKm = distanceInMeters / 1000;
-//		    distance=distanceInKm;
-//
-//		    System.out.println("Distance in KM: " + distanceInKm);
-//		}
-//		double chargableDistance;
-//		if(distance>2.0)
-//		{
-//			 chargableDistance=distance-2.0;
-//			deliveryCharge=chargableDistance*10;
-//		}
-//		double cost=deliveryCharge+restaurant.getPackagingfee()+productCost;
-//		order.setCost(cost);
-//		order.setCustomer(cs);
-//		order.setItems(cs.getCart());
-//		order.setPickupAddress(restaurant.getAddress());
-//		order.setEstimatedTime("10min");
-//		order.setDate("date");
-//		orderRepo.save(order);
-//		OrderNeedconsetDto conset=new OrderNeedconsetDto();
-//		conset.setCart(order.getItems());
-//		conset.setDate(order.getDate());
-//		conset.setDeliveryAddress(order.getAddress());
-//		conset.setPrice(cost);
-//		conset.setStatus("yet to confirm");		
-//		ResponseStructure<OrderNeedconsetDto> resp=new ResponseStructure<OrderNeedconsetDto>();
-//		resp.setData(conset);
-//		resp.setMessage("Order set successfully");
-//		resp.setstatuscode(HttpStatus.OK.value());
-//		return resp;
-//	}
+
 	public ResponseStructure<OrderNeedconsetDto> placeOrder(long mobileNumber,
 	        String addressType,
 	        String deliveryInstructions,
@@ -347,7 +278,7 @@ public class CustomerService {
 	    order.setRestarunt(restaurant);
 	    order.setAddress(deliveryAddress);
 	    order.setPickupAddress(restaurant.getAddress());
-	    List<CartItem> orderItems = new ArrayList<>(customer.getCart());
+	    List<CartItem> orderItems = customer.getCart();
 	    order.setItems(orderItems);
 	    order.setDeliveryInstructions(deliveryInstructions);
 	    order.setEstimatedTime("10min");
@@ -408,31 +339,34 @@ public class CustomerService {
 	public ResponseStructure<Orders> CancelOrder(long custMobno, long orderid) {
 	Customer customer=	cr.findByMobileNumber(orderid);
 	if(customer==null) {
-		throw new  CustomerNotFoundException();
+		throw new CustomerNotFoundException();
 	}
-      Orders order=	orderRepo.findById(orderid).orElseThrow(()-> new OrderNotFoundException());
-   
-   if(order.getDeliveryPartner()==null) {
-	   order.setStatus("Cancelled");
-	 if(order.getPayment().getPaymentType().equals("Online") ) {
-		 customer.setVallet(customer.getVallet()+order.getCost());
-	       }
-     }
-    
-   if(order.getDeliveryPartner()!=null) {
-	   double penality=order.getCost()*0.01;
-	   if(order.getPayment().getPaymentType().equals("Online")) {
-		   customer.setVallet(order.getCost()-penality);
-	   }else {
-		   customer.setPenality(penality);
-	   }
-    }
-    ResponseStructure<Orders> rs=new ResponseStructure<Orders>();
-    rs.setstatuscode(HttpStatus.ACCEPTED.value());
-    rs.setMessage("Order is cancelled successfully");
-    rs.setData(order);
-    return rs;
-    } 
+	 Orders order=	orderRepo.findById(orderid).orElseThrow(()-> new OrderNotFoundException());
+	   
+	   if(order.getDeliveryPartner()==null) {
+		   order.setStatus("Cancelled");
+		 if(order.getPayment().getPaymentType().equals("Online") ) {
+			 customer.setVallet(customer.getVallet()+order.getCost());
+		       }
+	     }
+	    
+	   if(order.getDeliveryPartner()!=null) {
+		   double penality=order.getCost()*0.01;
+		   if(order.getPayment().getPaymentType().equals("Online")) {
+			   customer.setVallet(order.getCost()-penality);
+		   }else {
+			   customer.setPenality(penality);
+		   }
+	    }
+	    ResponseStructure<Orders> rs=new ResponseStructure<Orders>();
+	    rs.setstatuscode(HttpStatus.ACCEPTED.value());
+	    rs.setMessage("Order is cancelled successfully");
+	    rs.setData(order);
+	    return rs;
+	    } 
+
+	
+     
 public ResponseStructure<Customer> removeItemFromCart(long mobileNumber, Long itemId) {
 		Customer customer=cr.findByMobileNumber(mobileNumber);
 		if(customer==null) throw new CustomerNotFoundException();
@@ -452,6 +386,6 @@ public ResponseStructure<Customer> removeItemFromCart(long mobileNumber, Long it
 		resp.setstatuscode(HttpStatus.OK.value());
 		return resp;
 	}
-	
+
 	
 }
