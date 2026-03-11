@@ -433,6 +433,25 @@ public class CustomerService {
     rs.setData(order);
     return rs;
     } 
+public ResponseStructure<Customer> removeItemFromCart(long mobileNumber, Long itemId) {
+		Customer customer=cr.findByMobileNumber(mobileNumber);
+		if(customer==null) throw new CustomerNotFoundException();
+		for(CartItem item: customer.getCart())
+		{
+			if((item.getItem().getItemId())==(itemId))
+			{
+				customer.getCart().remove(item);
+				cartItemRepo.save(item);
+				break;
+			}
+		}
+		cr.save(customer);
+		ResponseStructure<Customer> resp=new ResponseStructure<Customer>();
+		resp.setData(customer);
+		resp.setMessage("Item Deleted SuccessFully");
+		resp.setstatuscode(HttpStatus.OK.value());
+		return resp;
+	}
 	
 	
 }
