@@ -32,6 +32,8 @@ public class Restaurant {
 	private double packagingfee;
 	private String type;
 	private String status="Closed";
+	
+	private double vallet=0.0;
 	public Restaurant(long id, String name, long mobileno, String mail, Address address, List<Item> menu, int rating,
 			String description, List<Orders> orders, double packagingfee, String type, String status) {
 		super();
@@ -48,6 +50,15 @@ public class Restaurant {
 		this.type = type;
 		this.status = status;
 	}
+	
+	public double getVallet() {
+		return vallet;
+	}
+
+	public void setVallet(double vallet) {
+		this.vallet = vallet;
+	}
+
 	public String getStatus() {
 		return status;
 	}

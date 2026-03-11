@@ -266,12 +266,15 @@ public class CustomerService {
 	        String addressType,
 	        String deliveryInstructions,
 	        String specialRequest) {
-
+		Orders order = new Orders();
+		order.setStatus("waiting for conformation");
+		orderRepo.save(order);
+		
 	    Customer customer = cr.findByMobileNumber(mobileNumber);
 	    if (customer == null)
 	        throw new CustomerNotFoundException();
 	    if (customer.getCart() == null || customer.getCart().isEmpty())
-	        throw new RuntimeException("Cart is empty");
+	        throw new RuntimeException("Cart is  empty");
 
 	    CartItem firstCartItem = customer.getCart().get(0);
 
@@ -338,8 +341,8 @@ public class CustomerService {
 
 	    double totalCost = productCost + deliveryCharge + restaurant.getPackagingfee();
 
-	    Orders order = new Orders();
-	    order.setStatus("Placed");
+	    
+	    order.setStatus("Custmer Conformed");
 	    order.setCustomer(customer);
 	    order.setRestarunt(restaurant);
 	    order.setAddress(deliveryAddress);
@@ -373,7 +376,7 @@ public class CustomerService {
 		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
 		order.setStatus("Placed");
 		int min=1000;
-		int max=9999;
+		int max=9999; 
 		int otp = ThreadLocalRandom.current().nextInt(min, max + 1);
 		order.setOtp(otp);
 		Restaurant restaurant=customer.getCart().get(0).getItem().getRestaurant();
@@ -389,19 +392,48 @@ public class CustomerService {
 		
 		
 	}
-	public ResponseStructure<Orders> denyOrder(long orderId, Long mobileNumber) {
-		Customer customer=cr.findByMobileNumber(mobileNumber);
-		if(customer==null)throw new CustomerNotFoundException();
-		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
-		order.setStatus("Cancelled");
-		ResponseStructure<Orders> resp=new ResponseStructure<Orders>();
-		resp.setData(order);
-		resp.setMessage("Order cancelled successfully");
-		resp.setstatuscode(HttpStatus.OK.value());
-		return resp;
-		
+//	public ResponseStructure<Orders> denyOrder(long orderId, Long mobileNumber) {
+//		Customer customer=cr.findByMobileNumber(mobileNumber);
+//		if(customer==null)throw new CustomerNotFoundException();
+//		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
+//		order.setStatus("Cancelled");
+//		ResponseStructure<Orders> resp=new ResponseStructure<Orders>();
+//		resp.setData(order);
+//		resp.setMessage("Order cancelled successfully");
+//		resp.setstatuscode(HttpStatus.OK.value());
+//		return resp;
+//		
+//	}
+	
+	public ResponseStructure<Orders> CancelOrder(long custMobno, long orderid) {
+	Customer customer=	cr.findByMobileNumber(orderid);
+	if(customer==null) {
+		throw new  CustomerNotFoundException();
 	}
-	public ResponseStructure<Customer> removeItemFromCart(long mobileNumber, Long itemId) {
+      Orders order=	orderRepo.findById(orderid).orElseThrow(()-> new OrderNotFoundException());
+   
+   if(order.getDeliveryPartner()==null) {
+	   order.setStatus("Cancelled");
+	 if(order.getPayment().getPaymentType().equals("Online") ) {
+		 customer.setVallet(customer.getVallet()+order.getCost());
+	       }
+     }
+    
+   if(order.getDeliveryPartner()!=null) {
+	   double penality=order.getCost()*0.01;
+	   if(order.getPayment().getPaymentType().equals("Online")) {
+		   customer.setVallet(order.getCost()-penality);
+	   }else {
+		   customer.setPenality(penality);
+	   }
+    }
+    ResponseStructure<Orders> rs=new ResponseStructure<Orders>();
+    rs.setstatuscode(HttpStatus.ACCEPTED.value());
+    rs.setMessage("Order is cancelled successfully");
+    rs.setData(order);
+    return rs;
+    } 
+public ResponseStructure<Customer> removeItemFromCart(long mobileNumber, Long itemId) {
 		Customer customer=cr.findByMobileNumber(mobileNumber);
 		if(customer==null) throw new CustomerNotFoundException();
 		for(CartItem item: customer.getCart())
@@ -420,7 +452,6 @@ public class CustomerService {
 		resp.setstatuscode(HttpStatus.OK.value());
 		return resp;
 	}
-
 	
 	
 }
