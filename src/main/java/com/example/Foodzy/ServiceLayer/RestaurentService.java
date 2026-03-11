@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.example.Foodzy.Dtos.RestaurentRegistrationDto;
+import com.example.Foodzy.Exceptions.ItemNotFoundException;
 import com.example.Foodzy.Exceptions.OrderNotFoundException;
 import com.example.Foodzy.Exceptions.RestaurantnotFoundException;
 import com.example.Foodzy.Repositary.AddressRepo;
@@ -161,6 +162,42 @@ public class RestaurentService {
 		resp.setMessage("Order Accepted and assigning the deliver parners");
 		resp.setstatuscode(HttpStatus.ACCEPTED.value());
 		resp.setData(partnerIds);
+		return resp;
+	}
+	public ResponseStructure<Restaurant> removeItemFromMenu(Long mobileNumber, Long itemId) {
+		Restaurant restaurant=repo.findByMobileno(mobileNumber);
+		if(restaurant==null) throw new RestaurantnotFoundException();
+		for(Item i:restaurant.getMenu())
+		{
+			if(i.getItemId()==itemId)
+			{
+				restaurant.getMenu().remove(i);
+				break;
+			}
+		}
+		repo.save(restaurant);
+		ResponseStructure<Restaurant> resp=new ResponseStructure<Restaurant>();
+		resp.setData(restaurant);
+		resp.setMessage("Item has been removed successfully");
+		resp.setstatuscode(HttpStatus.OK.value());
+		return resp;
+		
+	}
+	public ResponseStructure<Item> updateItemDetails(Long mobilenumber, Long itemId) {
+		Restaurant restaurant =repo.findByMobileno(mobilenumber);
+		if(restaurant==null) throw new RestaurantnotFoundException();
+		Item i=null;
+		for(Item item:restaurant.getMenu())
+		{
+			item.setAvailability("Not Available");
+			ir.save(item);
+			i=item;
+			break;
+		}
+		ResponseStructure<Item> resp=new ResponseStructure<Item>();
+		resp.setData(i);
+		resp.setMessage("details Upfdated Successfully");
+		resp.setstatuscode(HttpStatus.OK.value());
 		return resp;
 	}
 	public ResponseStructure<Restaurant> CancelOrder(Long restMobno, long orderid) {

@@ -25,6 +25,7 @@ import com.example.Foodzy.Dtos.RestaurentInfo;
 import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.ServiceLayer.CustomerService;
 import com.example.Foodzy.entity.Address;
+import com.example.Foodzy.entity.CartItem;
 import com.example.Foodzy.entity.Customer;
 import com.example.Foodzy.entity.Orders;
 
@@ -88,11 +89,12 @@ public class CustomerController {
 	public ResponseStructure<Orders> CancelOrder(@RequestParam long CustMobno,@RequestParam long Orderid) {
 		return cs.CancelOrder(CustMobno,Orderid);
 	}
+	@DeleteMapping
+	public ResponseStructure<Customer> removeItemFromCart(@RequestParam long mobileNumber,@RequestParam long itemId)
+	{
+		return cs.removeItemFromCart(mobileNumber,itemId);
+	}
 	
-<<<<<<< HEAD
 
 }		
-=======
-	
-}
->>>>>>> 3f737228c7bb0fd8ca300e7f66e97b1b3121f52b
+
