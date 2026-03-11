@@ -189,13 +189,199 @@ public class CustomerService {
 		
 		return resp;
 	}
+<<<<<<< HEAD
+=======
+		
+	
+	
+//	public ResponseStructure<OrderNeedconsetDto> placeOrder(long mobileNumber, String addressType, String deliveryInstructions, String specialRequest) {
+//		Customer cs=cr.findByMobileNumber(mobileNumber);
+//		if(cs==null) throw new CustomerNotFoundException();
+//		Orders order=new Orders();
+//		order.setStatus("Placed");
+//		Restaurant restaurant=cs.getCart().get(0).getItem().getRestaurant();
+//		if(restaurant==null) throw new RestaurantnotFoundException();
+//		
+//
+//		if(!restaurant.getStatus().equals("Opened")) {
+//			throw new RestaurantException();
+//		}
+//		order.setRestarunt(restaurant);
+//		order.setDeliveryInstructions(deliveryInstructions);
+//		Address address=null;
+//		for(Address a:cs.getAddress())
+//		{
+//			if(a.getType().equals(addressType))
+//			{
+//				order.setAddress(a);
+//				address=a;
+//				break;
+//			}
+//		}
+//	
+//		double productCost=0;
+//		for(CartItem cartItem:cs.getCart())
+//		{
+//			productCost=cartItem.getItem().getPrice()*cartItem.getQuantity()+productCost;
+//		}
+//		
+//		double deliveryCharge=0;
+//		Map response=restTemplate.getForObject("https://us1.locationiq.com/v1/directions/driving/"+restaurant.getAddress().getLatitude()+","+restaurant.getAddress().getLongitude()+";"+address.getLatitude()+","+address.getLongitude()+"?key=pk.e155d0e145eee3dbf5bf4a52ae8ec527&steps=true&alternatives=true&geometries=polyline&overview=full&", Map.class);
+//		double distance=0;
+//		List routes = (List) response.get("routes");
+//
+//		if (routes != null && !routes.isEmpty()) {
+//		    Map firstRoute = (Map) routes.get(0);
+//
+//		    Double distanceInMeters = (Double) firstRoute.get("distance");
+//
+//		    Double distanceInKm = distanceInMeters / 1000;
+//		    distance=distanceInKm;
+//
+//		    System.out.println("Distance in KM: " + distanceInKm);
+//		}
+//		double chargableDistance;
+//		if(distance>2.0)
+//		{
+//			 chargableDistance=distance-2.0;
+//			deliveryCharge=chargableDistance*10;
+//		}
+//		double cost=deliveryCharge+restaurant.getPackagingfee()+productCost;
+//		order.setCost(cost);
+//		order.setCustomer(cs);
+//		order.setItems(cs.getCart());
+//		order.setPickupAddress(restaurant.getAddress());
+//		order.setEstimatedTime("10min");
+//		order.setDate("date");
+//		orderRepo.save(order);
+//		OrderNeedconsetDto conset=new OrderNeedconsetDto();
+//		conset.setCart(order.getItems());
+//		conset.setDate(order.getDate());
+//		conset.setDeliveryAddress(order.getAddress());
+//		conset.setPrice(cost);
+//		conset.setStatus("yet to confirm");		
+//		ResponseStructure<OrderNeedconsetDto> resp=new ResponseStructure<OrderNeedconsetDto>();
+//		resp.setData(conset);
+//		resp.setMessage("Order set successfully");
+//		resp.setstatuscode(HttpStatus.OK.value());
+//		return resp;
+//	}
+	public ResponseStructure<OrderNeedconsetDto> placeOrder(long mobileNumber,
+	        String addressType,
+	        String deliveryInstructions,
+	        String specialRequest) {
+		Orders order = new Orders();
+		order.setStatus("waiting for conformation");
+		orderRepo.save(order);
+		
+	    Customer customer = cr.findByMobileNumber(mobileNumber);
+	    if (customer == null)
+	        throw new CustomerNotFoundException();
+	    if (customer.getCart() == null || customer.getCart().isEmpty())
+	        throw new RuntimeException("Cart is  empty");
+
+	    CartItem firstCartItem = customer.getCart().get(0);
+
+	    if (firstCartItem.getItem() == null)
+	        throw new ItemNotFoundException();
+
+	    Restaurant restaurant = firstCartItem.getItem().getRestaurant();
+
+	    if (restaurant == null)
+	        throw new RestaurantnotFoundException();
+
+	    if (!"Opened".equalsIgnoreCase(restaurant.getStatus()))
+	        throw new RestaurantException();
+
+	    for (CartItem cartItem : customer.getCart()) {
+	        if (cartItem.getItem().getRestaurant().getId()!=(restaurant.getId())) {
+	            throw new RuntimeException("Cart contains items from multiple restaurants");
+	        }
+	    }
+	    Address deliveryAddress = null;
+
+	    for (Address address : customer.getAddress()) {
+	        if (address.getType().equalsIgnoreCase(addressType)) {
+	            deliveryAddress = address;
+	            break;
+	        }
+	    }
+
+	    if (deliveryAddress == null)
+	        throw new RuntimeException("Address type not found");
+
+	    double productCost = 0;
+
+	    for (CartItem cartItem : customer.getCart()) {
+	        productCost += cartItem.getItem().getPrice() * cartItem.getQuantity();
+	    }
+
+	    double distance = 0;
+
+	    Map response = restTemplate.getForObject(
+	            "https://us1.locationiq.com/v1/directions/driving/"
+	                    + restaurant.getAddress().getLatitude() + ","
+	                    + restaurant.getAddress().getLongitude()
+	                    + ";"
+	                    + deliveryAddress.getLatitude() + ","
+	                    + deliveryAddress.getLongitude()
+	                    + "?key=pk.e155d0e145eee3dbf5bf4a52ae8ec527&overview=false",
+	            Map.class);
+
+	    List routes = (List) response.get("routes");
+
+	    if (routes != null && !routes.isEmpty()) {
+	        Map firstRoute = (Map) routes.get(0);
+	        Double distanceMeters = (Double) firstRoute.get("distance");
+	        distance = distanceMeters / 1000;
+	    }
+
+	    double deliveryCharge = 0;
+
+	    if (distance > 2) {
+	        double chargeableDistance = distance - 2;
+	        deliveryCharge = chargeableDistance * 10;
+	    }
+
+	    double totalCost = productCost + deliveryCharge + restaurant.getPackagingfee();
+
+	    
+	    order.setStatus("Custmer Conformed");
+	    order.setCustomer(customer);
+	    order.setRestarunt(restaurant);
+	    order.setAddress(deliveryAddress);
+	    order.setPickupAddress(restaurant.getAddress());
+	    List<CartItem> orderItems = new ArrayList<>(customer.getCart());
+	    order.setItems(orderItems);
+	    order.setDeliveryInstructions(deliveryInstructions);
+	    order.setEstimatedTime("10min");
+	    order.setCost(totalCost);
+	    order.setDate(LocalDate.now().toString());
+
+	    orderRepo.save(order);
+
+	    OrderNeedconsetDto dto = new OrderNeedconsetDto();
+	    dto.setCart(order.getItems());
+	    dto.setDate(order.getDate());
+	    dto.setDeliveryAddress(order.getAddress());
+	    dto.setPrice(totalCost);
+	    dto.setStatus("yet to confirm");
+
+	    ResponseStructure<OrderNeedconsetDto> responseStructure = new ResponseStructure<>();
+	    responseStructure.setData(dto);
+	    responseStructure.setMessage("Order placed successfully");
+	    responseStructure.setstatuscode(HttpStatus.OK.value());
+
+	    return responseStructure;
+	}
+>>>>>>> 3f737228c7bb0fd8ca300e7f66e97b1b3121f52b
 	public ResponseStructure<Orders> confirmOrder(long mobileNo, Long orderId) {
 		Customer customer=cr.findByMobileNumber(mobileNo);
 		if(customer==null)throw new CustomerNotFoundException();
 		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
 		order.setStatus("Placed");
 		int min=1000;
-		int max=9999;
+		int max=9999; 
 		int otp = ThreadLocalRandom.current().nextInt(min, max + 1);
 		order.setOtp(otp);
 		Restaurant restaurant=customer.getCart().get(0).getItem().getRestaurant();
@@ -211,18 +397,25 @@ public class CustomerService {
 		
 		
 	}
-	public ResponseStructure<Orders> denyOrder(long orderId, Long mobileNumber) {
-		Customer customer=cr.findByMobileNumber(mobileNumber);
-		if(customer==null)throw new CustomerNotFoundException();
-		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
-		order.setStatus("Cancelled");
-		ResponseStructure<Orders> resp=new ResponseStructure<Orders>();
-		resp.setData(order);
-		resp.setMessage("Order cancelled successfully");
-		resp.setstatuscode(HttpStatus.OK.value());
-		return resp;
-		
+//	public ResponseStructure<Orders> denyOrder(long orderId, Long mobileNumber) {
+//		Customer customer=cr.findByMobileNumber(mobileNumber);
+//		if(customer==null)throw new CustomerNotFoundException();
+//		Orders order=orderRepo.findById(orderId).orElseThrow(()->new OrderNotFoundException());
+//		order.setStatus("Cancelled");
+//		ResponseStructure<Orders> resp=new ResponseStructure<Orders>();
+//		resp.setData(order);
+//		resp.setMessage("Order cancelled successfully");
+//		resp.setstatuscode(HttpStatus.OK.value());
+//		return resp;
+//		
+//	}
+	
+	public ResponseStructure<Orders> CancelOrder(long custMobno, long orderid) {
+	Customer customer=	cr.findByMobileNumber(orderid);
+	if(customer==null) {
+		throw new  CustomerNotFoundException();
 	}
+<<<<<<< HEAD
 	
 	
 	public ResponseStructure<OrderNeedconsetDto> placeOrder(long mobileNumber, String addressType, String deliveryInstructions, String specialRequest) {
@@ -299,5 +492,30 @@ public class CustomerService {
 	}
 	
 
+=======
+      Orders order=	orderRepo.findById(orderid).orElseThrow(()-> new OrderNotFoundException());
+   
+   if(order.getDeliveryPartner()==null) {
+	   order.setStatus("Cancelled");
+	 if(order.getPayment().getPaymentType().equals("Online") ) {
+		 customer.setVallet(customer.getVallet()+order.getCost());
+	       }
+     }
+    
+   if(order.getDeliveryPartner()!=null) {
+	   double penality=order.getCost()*0.01;
+	   if(order.getPayment().getPaymentType().equals("Online")) {
+		   customer.setVallet(order.getCost()-penality);
+	   }else {
+		   customer.setPenality(penality);
+	   }
+    }
+    ResponseStructure<Orders> rs=new ResponseStructure<Orders>();
+    rs.setstatuscode(HttpStatus.ACCEPTED.value());
+    rs.setMessage("Order is cancelled successfully");
+    rs.setData(order);
+    return rs;
+    } 
+>>>>>>> 3f737228c7bb0fd8ca300e7f66e97b1b3121f52b
 	
 }

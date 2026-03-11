@@ -163,5 +163,29 @@ public class RestaurentService {
 		resp.setData(partnerIds);
 		return resp;
 	}
+	public ResponseStructure<Restaurant> CancelOrder(Long restMobno, long orderid) {
+	     Restaurant restaurant=	repo.findByMobileno(restMobno);
+	    Orders or= orderRepo.findById(orderid).orElseThrow(()-> new OrderNotFoundException());
+	    
+	    or.setStatus("Cancelled");
+	    or.setRestarunt(restaurant);
+	    
+	    double penality=0.0;
+	    penality=or.getCost()*0.1;
+	    restaurant.setVallet(restaurant.getVallet()+penality);
+	    
+	    repo.save(restaurant);
+	    orderRepo.save(or);
+	    
+	    ResponseStructure<Restaurant> rs=new ResponseStructure<Restaurant>();
+	    rs.setstatuscode(HttpStatus.ACCEPTED.value());
+	    rs.setMessage("Order cancelled successfully");
+	    rs.setData(restaurant);
+	    
+	    return rs;
+	    
+	}
+	
+	
 	
 }

@@ -66,10 +66,16 @@ public class RestaurentController {
 	{
 		return redisService.getNearByPartners(latitude,longitude,radiusKm);
 	}
-	@PatchMapping("/acceptOrder")
+	@PatchMapping("/acceptOrder") 
 	public ResponseStructure<List<String>> acceptOrder(@RequestParam long orderId)
 	{
 		return rs.acceptOrder(orderId);
 	}
-
+	
+	@PatchMapping("/cancelOrder")
+	public ResponseStructure<Restaurant> CancelisationOrder(@RequestParam Long restMobno,@RequestParam long orderid) {
+		 return rs.CancelOrder(restMobno,orderid);
+	}
+	
+	
 }

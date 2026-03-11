@@ -31,13 +31,49 @@ public class Customer {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<CartItem>cart;
+	private double penality;
+	private double vallet;
 	
 	public long getId() {
 		return id;
 	}
+	
 	public void setId(long id) {
 		this.id = id;
 	}
+	
+	public Long getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(Long mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public List<Address> getAddresses() {
+		return addresses;
+	}
+
+	public void setAddresses(List<Address> addresses) {
+		this.addresses = addresses;
+	}
+
+	public double getPenality() {
+		return penality;
+	}
+
+	public void setPenality(double penality) {
+		this.penality = penality;
+	}
+
+	public double getVallet() {
+		return vallet;
+	}
+
+	public void setVallet(double d) {
+		this.vallet = d;
+	}
+
 	public String getName() {
 		return name;
 	}
