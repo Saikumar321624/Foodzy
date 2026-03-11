@@ -101,5 +101,15 @@ public class GLobalExceptionHandler {
 		return new ResponseEntity<ResponseStructure<String>>(rs,HttpStatus.BAD_GATEWAY);
 		
 	}
+	
+	@ExceptionHandler(couponNotException.class)
+	public ResponseStructure<String> CouponNotFoundexception() {
+		ResponseStructure<String> rs=new ResponseStructure<String>();
+		rs.setstatuscode(HttpStatus.BAD_REQUEST.value());
+		rs.setMessage("invalid crediatials");
+		rs.setData("invalid crediatials");
+		
+		return rs;
+	}
 
 }

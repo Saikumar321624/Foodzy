@@ -83,5 +83,6 @@ public class CustomerController {
 	public ResponseStructure<Orders> denyOrder(@RequestParam long orderId,@RequestParam long mobileNumber) {
 		return cs.denyOrder(orderId,mobileNumber);
 	}
+	
 
 }		
