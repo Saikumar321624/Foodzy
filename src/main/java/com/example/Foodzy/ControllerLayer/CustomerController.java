@@ -71,9 +71,9 @@ public class CustomerController {
 
 	@PostMapping("/placeOrder")
 
-	public ResponseStructure<OrderNeedconsetDto> placeOrder(@RequestParam long mobileNumber,@RequestParam String orderType,@RequestParam String deliveryInstructions,@RequestParam String specialRequest)
+	public ResponseStructure<OrderNeedconsetDto> placeOrder(@RequestParam long mobileNumber,@RequestParam String orderType,@RequestParam String deliveryInstructions,@RequestParam String specialRequest,@RequestParam long couponid)
 	{
-		return  cs.placeOrder(mobileNumber,orderType,deliveryInstructions,specialRequest);
+		return  cs.placeOrder(mobileNumber,orderType,deliveryInstructions,specialRequest,couponid);
 	}
 	@PatchMapping("/confirmOrder")
 	public ResponseStructure<Orders> confirmOrder(@RequestParam long mobileNo,@RequestParam long orderId)

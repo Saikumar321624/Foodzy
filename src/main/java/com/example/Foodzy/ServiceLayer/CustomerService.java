@@ -20,9 +20,12 @@ import com.example.Foodzy.Exceptions.CustomerNotFoundException;
 import com.example.Foodzy.Exceptions.ItemNotFoundException;
 import com.example.Foodzy.Exceptions.RestaurantException;
 import com.example.Foodzy.Exceptions.RestaurantnotFoundException;
+import com.example.Foodzy.Exceptions.couponNotException;
 import com.example.Foodzy.Exceptions.OrderNotFoundException;
 import com.example.Foodzy.Repositary.AddressRepo;
 import com.example.Foodzy.Repositary.CartItemRepo;
+import com.example.Foodzy.Repositary.CouponRedemptionRepo;
+import com.example.Foodzy.Repositary.CouponRepo;
 import com.example.Foodzy.Repositary.CustomerRepo;
 import com.example.Foodzy.Repositary.ItemRepo;
 import com.example.Foodzy.Repositary.OrdersRepo;
@@ -30,6 +33,8 @@ import com.example.Foodzy.Repositary.RestaurantRepo;
 import com.example.Foodzy.Response.ResponseStructure;
 import com.example.Foodzy.entity.Address;
 import com.example.Foodzy.entity.CartItem;
+import com.example.Foodzy.entity.Coupon;
+import com.example.Foodzy.entity.CouponRedemption;
 import com.example.Foodzy.entity.Customer;
 import com.example.Foodzy.entity.Item;
 import com.example.Foodzy.entity.Orders;
@@ -53,6 +58,12 @@ public class CustomerService {
 	OrdersRepo orderRepo;
 	@Autowired
 	AddressRepo ar;
+	
+	@Autowired
+	private CouponRepo couponRepo;
+	
+	@Autowired
+	private CouponRedemptionRepo couponRedemptionRepo;
 	public ResponseStructure<CustomerRegistrationDto> registerCustomer(CustomerRegistrationDto cdto) {
 		Customer c = new Customer();
 		c.setName(cdto.getName());
@@ -196,11 +207,15 @@ public class CustomerService {
 	public ResponseStructure<OrderNeedconsetDto> placeOrder(long mobileNumber,
 	        String addressType,
 	        String deliveryInstructions,
-	        String specialRequest) {
+	        String specialRequest,long couponid) {
 		Orders order = new Orders();
 		order.setStatus("waiting for conformation");
 		orderRepo.save(order);
-		
+	    CouponRedemption couponRedemption= couponRedemptionRepo.findByCustomermobileNumberAndCouponId(mobileNumber,couponid);
+		if(couponRedemption!=null) {
+			throw new RuntimeException("Sorry coupon is already used");
+		}
+		int discount=couponRedemption.getCoupon().getOffer();
 	    Customer customer = cr.findByMobileNumber(mobileNumber);
 	    if (customer == null)
 	        throw new CustomerNotFoundException();
@@ -271,7 +286,9 @@ public class CustomerService {
 	    }
 
 	    double totalCost = productCost + deliveryCharge + restaurant.getPackagingfee();
-
+	    
+	    totalCost=totalCost-(discount/100)*totalCost; //for coupon discount
+	    couponRedemptionRepo.save(couponRedemption);
 	    
 	    order.setStatus("Custmer Conformed");
 	    order.setCustomer(customer);
